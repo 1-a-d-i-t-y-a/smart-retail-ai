@@ -1,0 +1,26 @@
+{
+  "component": "Retail Chatbot",
+  "endpoint": "POST /chatbot",
+  "architecture": "normalisation -> weighted intent detection -> retail knowledge base -> structured response",
+  "intent_cases_total": 9,
+  "intent_cases_passed": 9,
+  "intent_case_rate": 1.0,
+  "supported_intents": [
+    "fallback",
+    "greeting",
+    "order_status",
+    "payment",
+    "products",
+    "returns",
+    "shipping",
+    "store_info",
+    "support"
+  ],
+  "health": {
+    "status": "healthy",
+    "service": "AI-Powered Smart Retail & Customer Intelligence Platform",
+    "version": "1.0.0"
+  },
+  "openapi_endpoint_present": true,
+  "interpretation": "Reconstruction benchmark; not historical internship telemetry or production accuracy."
+}

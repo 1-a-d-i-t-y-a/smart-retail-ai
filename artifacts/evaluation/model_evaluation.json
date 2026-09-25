@@ -1,0 +1,514 @@
+{
+  "product": {
+    "dataset_samples": 300,
+    "classes": [
+      "bottle",
+      "mug",
+      "headphones",
+      "shoe"
+    ],
+    "cross_validation": {
+      "folds": 5,
+      "scores": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "mean_accuracy": 1.0,
+      "std_accuracy": 0.0
+    },
+    "challenge_holdout": {
+      "samples": 120,
+      "accuracy": 0.6,
+      "macro_precision": 0.8461538461538461,
+      "macro_recall": 0.6,
+      "macro_f1": 0.6097699242298545,
+      "confusion_matrix": [
+        [
+          19,
+          11,
+          0,
+          0
+        ],
+        [
+          0,
+          30,
+          0,
+          0
+        ],
+        [
+          0,
+          19,
+          11,
+          0
+        ],
+        [
+          0,
+          18,
+          0,
+          12
+        ]
+      ],
+      "classification_report": {
+        "bottle": {
+          "precision": 1.0,
+          "recall": 0.6333333333333333,
+          "f1-score": 0.7755102040816326,
+          "support": 30.0
+        },
+        "mug": {
+          "precision": 0.38461538461538464,
+          "recall": 1.0,
+          "f1-score": 0.5555555555555556,
+          "support": 30.0
+        },
+        "headphones": {
+          "precision": 1.0,
+          "recall": 0.36666666666666664,
+          "f1-score": 0.5365853658536586,
+          "support": 30.0
+        },
+        "shoe": {
+          "precision": 1.0,
+          "recall": 0.4,
+          "f1-score": 0.5714285714285714,
+          "support": 30.0
+        },
+        "accuracy": 0.6,
+        "macro avg": {
+          "precision": 0.8461538461538461,
+          "recall": 0.6,
+          "f1-score": 0.6097699242298545,
+          "support": 120.0
+        },
+        "weighted avg": {
+          "precision": 0.8461538461538463,
+          "recall": 0.6,
+          "f1-score": 0.6097699242298545,
+          "support": 120.0
+        }
+      },
+      "description": "Independently generated images using a new random seed plus blur, brightness shifts, partial occlusion, resize and reflection-padding transformations."
+    },
+    "note": "The 5-fold result is a controlled reconstruction benchmark. The challenge holdout is intentionally harder and is used to probe generalization beyond the simple generated training distribution; neither result is an original internship metric."
+  },
+  "sentiment": {
+    "dataset_samples": 378,
+    "classes": [
+      "negative",
+      "neutral",
+      "positive"
+    ],
+    "cross_validation": {
+      "folds": 5,
+      "scores": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "mean_accuracy": 1.0,
+      "std_accuracy": 0.0
+    },
+    "held_out_metrics": {
+      "accuracy": 1.0,
+      "macro_precision": 1.0,
+      "macro_recall": 1.0,
+      "macro_f1": 1.0,
+      "mean_max_probability": 0.6922561366179246,
+      "confusion_matrix": [
+        [
+          31,
+          0,
+          0
+        ],
+        [
+          0,
+          32,
+          0
+        ],
+        [
+          0,
+          0,
+          32
+        ]
+      ],
+      "class_support": {
+        "negative": 31,
+        "neutral": 32,
+        "positive": 32
+      }
+    },
+    "challenge_holdout": {
+      "samples": 18,
+      "accuracy": 0.3888888888888889,
+      "macro_precision": 0.26495726495726496,
+      "macro_recall": 0.3888888888888889,
+      "macro_f1": 0.28460038986354774,
+      "confusion_matrix": [
+        [
+          0,
+          4,
+          2
+        ],
+        [
+          0,
+          6,
+          0
+        ],
+        [
+          2,
+          3,
+          1
+        ]
+      ],
+      "classification_report": {
+        "negative": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 6.0
+        },
+        "neutral": {
+          "precision": 0.46153846153846156,
+          "recall": 1.0,
+          "f1-score": 0.631578947368421,
+          "support": 6.0
+        },
+        "positive": {
+          "precision": 0.3333333333333333,
+          "recall": 0.16666666666666666,
+          "f1-score": 0.2222222222222222,
+          "support": 6.0
+        },
+        "accuracy": 0.3888888888888889,
+        "macro avg": {
+          "precision": 0.26495726495726496,
+          "recall": 0.3888888888888889,
+          "f1-score": 0.28460038986354774,
+          "support": 18.0
+        },
+        "weighted avg": {
+          "precision": 0.26495726495726496,
+          "recall": 0.3888888888888889,
+          "f1-score": 0.28460038986354774,
+          "support": 18.0
+        }
+      },
+      "description": "Hand-written paraphrased retail statements designed to avoid template overlap and include indirect, mixed-context and less explicit sentiment wording."
+    },
+    "note": "The standard split/CV results are controlled reconstruction benchmarks. The challenge holdout intentionally probes language generalization and demonstrates that high in-distribution scores do not imply unrestricted customer-language accuracy."
+  },
+  "face": {
+    "cases": 10,
+    "correct": 10,
+    "accuracy_at_0_52": 1.0,
+    "roc_auc": 1.0,
+    "similarity_range": {
+      "min": 0.37978400666859774,
+      "max": 0.6781982357627725,
+      "mean": 0.5332514280899814
+    },
+    "threshold_sweep": [
+      {
+        "threshold": 0.4,
+        "accuracy": 0.7,
+        "tpr": 1.0,
+        "fpr": 0.6
+      },
+      {
+        "threshold": 0.42,
+        "accuracy": 0.8,
+        "tpr": 1.0,
+        "fpr": 0.4
+      },
+      {
+        "threshold": 0.44,
+        "accuracy": 0.8,
+        "tpr": 1.0,
+        "fpr": 0.4
+      },
+      {
+        "threshold": 0.46,
+        "accuracy": 1.0,
+        "tpr": 1.0,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.48,
+        "accuracy": 1.0,
+        "tpr": 1.0,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.5,
+        "accuracy": 1.0,
+        "tpr": 1.0,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.52,
+        "accuracy": 1.0,
+        "tpr": 1.0,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.54,
+        "accuracy": 1.0,
+        "tpr": 1.0,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.56,
+        "accuracy": 1.0,
+        "tpr": 1.0,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.58,
+        "accuracy": 1.0,
+        "tpr": 1.0,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.6,
+        "accuracy": 1.0,
+        "tpr": 1.0,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.62,
+        "accuracy": 0.9,
+        "tpr": 0.8,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.64,
+        "accuracy": 0.9,
+        "tpr": 0.8,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.66,
+        "accuracy": 0.7,
+        "tpr": 0.4,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.68,
+        "accuracy": 0.5,
+        "tpr": 0.0,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.7,
+        "accuracy": 0.5,
+        "tpr": 0.0,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.72,
+        "accuracy": 0.5,
+        "tpr": 0.0,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.74,
+        "accuracy": 0.5,
+        "tpr": 0.0,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.76,
+        "accuracy": 0.5,
+        "tpr": 0.0,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.78,
+        "accuracy": 0.5,
+        "tpr": 0.0,
+        "fpr": 0.0
+      },
+      {
+        "threshold": 0.8,
+        "accuracy": 0.5,
+        "tpr": 0.0,
+        "fpr": 0.0
+      }
+    ],
+    "selected_operating_threshold": 0.52,
+    "best_threshold_on_controlled_set": {
+      "threshold": 0.46,
+      "accuracy": 1.0,
+      "tpr": 1.0,
+      "fpr": 0.0
+    },
+    "results": [
+      {
+        "matched": true,
+        "person": "person_01",
+        "distance": 0.3218017642372275,
+        "similarity": 0.6781982357627725,
+        "bbox": [
+          13,
+          10,
+          105,
+          105
+        ],
+        "message": "Face matched",
+        "case": "positive_noise_0",
+        "expected_match": true,
+        "correct": true
+      },
+      {
+        "matched": true,
+        "person": "person_01",
+        "distance": 0.34890609393077354,
+        "similarity": 0.6510939060692265,
+        "bbox": [
+          11,
+          10,
+          106,
+          106
+        ],
+        "message": "Face matched",
+        "case": "positive_noise_3",
+        "expected_match": true,
+        "correct": true
+      },
+      {
+        "matched": true,
+        "person": "person_01",
+        "distance": 0.3570564197826591,
+        "similarity": 0.6429435802173409,
+        "bbox": [
+          9,
+          9,
+          109,
+          109
+        ],
+        "message": "Face matched",
+        "case": "positive_noise_6",
+        "expected_match": true,
+        "correct": true
+      },
+      {
+        "matched": true,
+        "person": "person_01",
+        "distance": 0.38867025853505033,
+        "similarity": 0.6113297414649497,
+        "bbox": [
+          11,
+          9,
+          107,
+          107
+        ],
+        "message": "Face matched",
+        "case": "positive_noise_10",
+        "expected_match": true,
+        "correct": true
+      },
+      {
+        "matched": true,
+        "person": "person_01",
+        "distance": 0.3337491119916669,
+        "similarity": 0.6662508880083331,
+        "bbox": [
+          11,
+          8,
+          108,
+          108
+        ],
+        "message": "Face matched",
+        "case": "positive_noise_15",
+        "expected_match": true,
+        "correct": true
+      },
+      {
+        "matched": false,
+        "person": null,
+        "distance": 0.6096645286066191,
+        "similarity": 0.3903354713933809,
+        "bbox": [
+          177,
+          65,
+          97,
+          97
+        ],
+        "message": "Face detected but no registered match",
+        "case": "negative_noise_0",
+        "expected_match": false,
+        "correct": true
+      },
+      {
+        "matched": false,
+        "person": null,
+        "distance": 0.5464071022671078,
+        "similarity": 0.45359289773289224,
+        "bbox": [
+          178,
+          67,
+          94,
+          94
+        ],
+        "message": "Face detected but no registered match",
+        "case": "negative_noise_3",
+        "expected_match": false,
+        "correct": true
+      },
+      {
+        "matched": false,
+        "person": null,
+        "distance": 0.5596370727034137,
+        "similarity": 0.4403629272965863,
+        "bbox": [
+          178,
+          66,
+          95,
+          95
+        ],
+        "message": "Face detected but no registered match",
+        "case": "negative_noise_6",
+        "expected_match": false,
+        "correct": true
+      },
+      {
+        "matched": false,
+        "person": null,
+        "distance": 0.6202159933314022,
+        "similarity": 0.37978400666859774,
+        "bbox": [
+          178,
+          66,
+          96,
+          96
+        ],
+        "message": "Face detected but no registered match",
+        "case": "negative_noise_10",
+        "expected_match": false,
+        "correct": true
+      },
+      {
+        "matched": false,
+        "person": null,
+        "distance": 0.5813773737142665,
+        "similarity": 0.41862262628573355,
+        "bbox": [
+          177,
+          66,
+          96,
+          96
+        ],
+        "message": "Face detected but no registered match",
+        "case": "negative_noise_15",
+        "expected_match": false,
+        "correct": true
+      }
+    ],
+    "note": "Controlled perturbation benchmark for the lightweight reconstructed face-verification demo; not a biometric validation study or an original internship metric."
+  }
+}

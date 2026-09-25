@@ -1,0 +1,64 @@
+{
+  "step": "Step 6 - Initial System Testing & Error Handling",
+  "checks": [
+    {
+      "name": "product_non_image",
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true
+    },
+    {
+      "name": "product_malformed_image",
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true
+    },
+    {
+      "name": "face_empty_image",
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true
+    },
+    {
+      "name": "sentiment_blank",
+      "expected_status": 422,
+      "actual_status": 422,
+      "passed": true
+    },
+    {
+      "name": "chatbot_blank",
+      "expected_status": 422,
+      "actual_status": 422,
+      "passed": true
+    },
+    {
+      "name": "chatbot_overlong",
+      "expected_status": 422,
+      "actual_status": 422,
+      "passed": true
+    },
+    {
+      "name": "product_oversized_image",
+      "expected_status": 400,
+      "actual_status": 400,
+      "passed": true
+    },
+    {
+      "name": "face_without_match",
+      "expected_status": 200,
+      "actual_status": 200,
+      "matched": false,
+      "passed": true
+    },
+    {
+      "name": "valid_product_image",
+      "expected_status": 200,
+      "actual_status": 200,
+      "product": "bottle",
+      "passed": true
+    }
+  ],
+  "passed": 9,
+  "total": 9,
+  "all_passed": true
+}

@@ -1,0 +1,112 @@
+{
+  "component": "FastAPI unified integration",
+  "checks": [
+    {
+      "component": "health",
+      "endpoint": "GET /health",
+      "status_code": 200,
+      "passed": true
+    },
+    {
+      "component": "product classification",
+      "endpoint": "POST /classify-product",
+      "status_code": 200,
+      "passed": true,
+      "response": {
+        "product": "bottle",
+        "confidence": 0.9655878968121493
+      }
+    },
+    {
+      "component": "face recognition",
+      "endpoint": "POST /recognize-face",
+      "status_code": 200,
+      "passed": true,
+      "response": {
+        "matched": true,
+        "person": "person_01",
+        "distance": 0.0,
+        "similarity": 1.0,
+        "bbox": [
+          13,
+          10,
+          106,
+          106
+        ],
+        "message": "Face matched"
+      }
+    },
+    {
+      "component": "sentiment analysis",
+      "endpoint": "POST /analyze-sentiment",
+      "status_code": 200,
+      "passed": true,
+      "response": {
+        "sentiment": "negative",
+        "confidence": 0.696715222392745
+      }
+    },
+    {
+      "component": "retail chatbot",
+      "endpoint": "POST /chatbot",
+      "status_code": 200,
+      "passed": true,
+      "response": {
+        "intent": "returns",
+        "response": "Return or exchange requests should be raised through the order-support workflow with the order ID and reason for return."
+      }
+    },
+    {
+      "component": "dashboard aggregation",
+      "endpoint": "GET /dashboard/stats",
+      "status_code": 200,
+      "passed": true,
+      "before": {
+        "total_requests": 0,
+        "product_requests": 0,
+        "face_requests": 0,
+        "sentiment_requests": 0,
+        "chatbot_requests": 0
+      },
+      "after": {
+        "total_requests": 4,
+        "product_requests": 1,
+        "face_requests": 1,
+        "sentiment_requests": 1,
+        "chatbot_requests": 1
+      },
+      "delta": {
+        "total_requests": 4,
+        "product_requests": 1,
+        "face_requests": 1,
+        "sentiment_requests": 1,
+        "chatbot_requests": 1
+      },
+      "expected_delta": {
+        "total_requests": 4,
+        "product_requests": 1,
+        "face_requests": 1,
+        "sentiment_requests": 1,
+        "chatbot_requests": 1
+      }
+    },
+    {
+      "component": "OpenAPI gateway",
+      "endpoint": "GET /openapi.json",
+      "status_code": 200,
+      "passed": true,
+      "required_paths": [
+        "/health",
+        "/classify-product",
+        "/recognize-face",
+        "/analyze-sentiment",
+        "/chatbot",
+        "/dashboard/stats"
+      ]
+    }
+  ],
+  "passed": 7,
+  "total": 7,
+  "all_passed": true,
+  "note": "Reconstruction smoke test executed against the local FastAPI gateway; results are not original historical internship telemetry."
+}

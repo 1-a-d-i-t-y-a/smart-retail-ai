@@ -1,0 +1,43 @@
+{
+  "health": {
+    "status": "healthy",
+    "service": "AI-Powered Smart Retail & Customer Intelligence Platform",
+    "version": "1.0.0"
+  },
+  "sentiment_positive": {
+    "sentiment": "positive",
+    "confidence": 0.6013432840478131
+  },
+  "sentiment_negative": {
+    "sentiment": "negative",
+    "confidence": 0.5836194953284625
+  },
+  "chatbot": {
+    "intent": "returns",
+    "response": "Returns and exchanges can be initiated through the order support process. Please keep your order details ready."
+  },
+  "product": {
+    "product": "bottle",
+    "confidence": 0.9655878968121493
+  },
+  "face": {
+    "matched": true,
+    "person": "person_01",
+    "distance": 0.14411460160095846,
+    "similarity": 0.8558853983990415,
+    "bbox": [
+      15,
+      11,
+      104,
+      104
+    ],
+    "message": "Face matched"
+  },
+  "dashboard": {
+    "total_requests": 5,
+    "product_requests": 1,
+    "face_requests": 1,
+    "sentiment_requests": 2,
+    "chatbot_requests": 1
+  }
+}

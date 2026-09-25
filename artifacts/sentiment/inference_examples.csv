@@ -1,0 +1,6 @@
+text,predicted_sentiment,confidence
+The customer loved the premium quality and fast delivery.,positive,0.7375863715568058
+The package arrived on Tuesday and contains two products.,neutral,0.8196729049945085
+The delivery was very late and the customer is unhappy.,negative,0.696715222392745
+The product is available in black and has a one year warranty.,neutral,0.8690482060647754
+The support team solved my issue quickly.,positive,0.7254301422385667

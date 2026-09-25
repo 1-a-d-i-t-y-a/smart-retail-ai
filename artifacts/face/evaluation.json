@@ -1,0 +1,61 @@
+{
+  "metrics": {
+    "cases": 3,
+    "correct": 3,
+    "accuracy": 1.0,
+    "threshold": 0.52,
+    "mean_positive_similarity": 0.8390991178813862,
+    "mean_negative_similarity": 0.3903354713933809,
+    "note": "Reconstructed face-verification demonstration using OpenCV Haar detection plus structural-similarity/correlation matching; not an original internship metric."
+  },
+  "results": [
+    {
+      "matched": true,
+      "person": "person_01",
+      "distance": 0.0,
+      "similarity": 1.0,
+      "bbox": [
+        13,
+        10,
+        106,
+        106
+      ],
+      "message": "Face matched",
+      "case": "reference",
+      "expected_match": true,
+      "correct": true
+    },
+    {
+      "matched": true,
+      "person": "person_01",
+      "distance": 0.3218017642372275,
+      "similarity": 0.6781982357627725,
+      "bbox": [
+        13,
+        10,
+        105,
+        105
+      ],
+      "message": "Face matched",
+      "case": "positive_query",
+      "expected_match": true,
+      "correct": true
+    },
+    {
+      "matched": false,
+      "person": null,
+      "distance": 0.6096645286066191,
+      "similarity": 0.3903354713933809,
+      "bbox": [
+        177,
+        65,
+        97,
+        97
+      ],
+      "message": "Face detected but no registered match",
+      "case": "negative_other_face",
+      "expected_match": false,
+      "correct": true
+    }
+  ]
+}

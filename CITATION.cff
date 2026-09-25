@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+title: "AI-Powered Smart Retail & Customer Intelligence Platform"
+type: software
+authors:
+  - family-names: "Soni"
+    given-names: "Aditya"
+year: 2026
+license: MIT
+abstract: "A reconstructed academic AI/ML platform integrating product classification, face verification, sentiment analysis, a deterministic retail chatbot, and FastAPI services."

@@ -1,0 +1,85 @@
+{
+  "evaluation": "end_to_end_system",
+  "passed": 5,
+  "total": 5,
+  "all_passed": true,
+  "checks": [
+    {
+      "workflow": "product_customer_issue",
+      "passed": true,
+      "product": {
+        "product": "bottle",
+        "confidence": 0.9655878968121493
+      },
+      "sentiment": {
+        "sentiment": "negative",
+        "confidence": 0.4799738294687563
+      },
+      "chatbot": {
+        "intent": "returns",
+        "response": "Return or exchange requests should be raised through the order-support workflow with the order ID and reason for return."
+      }
+    },
+    {
+      "workflow": "customer_identity_support",
+      "passed": true,
+      "face": {
+        "matched": true,
+        "person": "person_01",
+        "distance": 0.3218017642372275,
+        "similarity": 0.6781982357627725,
+        "bbox": [
+          13,
+          10,
+          105,
+          105
+        ],
+        "message": "Face matched"
+      },
+      "chatbot": {
+        "intent": "order_status",
+        "response": "Use the order ID with the order-status service to retrieve the latest shipment state."
+      }
+    },
+    {
+      "workflow": "product_neutral_feedback",
+      "passed": true,
+      "product": {
+        "product": "bottle",
+        "confidence": 0.9655878968121493
+      },
+      "sentiment": {
+        "sentiment": "neutral",
+        "confidence": 0.5136826085899746
+      }
+    },
+    {
+      "workflow": "validation_and_recovery",
+      "passed": true,
+      "invalid_status": 422,
+      "recovery": {
+        "intent": "payment",
+        "response": "A production version can expose the payment methods configured in the retail database. This reconstruction does not process payments."
+      }
+    },
+    {
+      "workflow": "dashboard_consistency",
+      "passed": true,
+      "delta": {
+        "total_requests": 8,
+        "product_requests": 2,
+        "face_requests": 1,
+        "sentiment_requests": 2,
+        "chatbot_requests": 3
+      },
+      "expected": {
+        "total_requests": 8,
+        "product_requests": 2,
+        "face_requests": 1,
+        "sentiment_requests": 2,
+        "chatbot_requests": 3
+      }
+    }
+  ],
+  "note": "Reconstructed end-to-end evaluation; results are not original historical internship telemetry."
+}

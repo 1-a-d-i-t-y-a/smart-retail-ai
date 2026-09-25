@@ -1,0 +1,10 @@
+{
+  "dockerfile_exists": true,
+  "compose_exists": true,
+  "env_example_exists": true,
+  "docker_cli_available": false,
+  "docker_build": false,
+  "docker_build_output_tail": "Docker CLI unavailable in execution environment; build not executed.",
+  "deployment_configuration_validated": true,
+  "overall_runtime_status": "runtime_not_executed"
+}

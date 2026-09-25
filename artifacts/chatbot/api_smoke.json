@@ -1,0 +1,84 @@
+{
+  "health": {
+    "status": "healthy",
+    "service": "AI-Powered Smart Retail & Customer Intelligence Platform",
+    "version": "1.0.0"
+  },
+  "chatbot_endpoint_present": true,
+  "cases": [
+    {
+      "case": "Greeting",
+      "message": "Hello, can you help me?",
+      "expected_intent": "greeting",
+      "actual_intent": "greeting",
+      "passed": true,
+      "response": "Hello! I can help with products, orders, delivery, returns, store information, payments, and customer support."
+    },
+    {
+      "case": "Product inquiry",
+      "message": "Can you recommend headphones?",
+      "expected_intent": "products",
+      "actual_intent": "products",
+      "passed": true,
+      "response": "I can help narrow a purchase by product category, features, and customer sentiment, but this demo does not connect to live inventory or prices. The reconstructed product demo covers Bottle, Mug, Headphones, and Shoe categories."
+    },
+    {
+      "case": "Order status",
+      "message": "Where is my order?",
+      "expected_intent": "order_status",
+      "actual_intent": "order_status",
+      "passed": true,
+      "response": "Use the order ID with the order-status service to retrieve the latest shipment state."
+    },
+    {
+      "case": "Delivery",
+      "message": "How long will delivery take?",
+      "expected_intent": "shipping",
+      "actual_intent": "shipping",
+      "passed": true,
+      "response": "Standard delivery in this demo is estimated at 3–7 business days. Actual delivery depends on destination and shipping method."
+    },
+    {
+      "case": "Returns",
+      "message": "I want a refund",
+      "expected_intent": "returns",
+      "actual_intent": "returns",
+      "passed": true,
+      "response": "Return or exchange requests should be raised through the order-support workflow with the order ID and reason for return."
+    },
+    {
+      "case": "Store information",
+      "message": "What are the store hours?",
+      "expected_intent": "store_info",
+      "actual_intent": "store_info",
+      "passed": true,
+      "response": "Store hours are configured as 10:00 AM to 8:00 PM, Monday to Saturday, for this reconstructed demo. The demo retail store is configured as a generic local store; a real deployment would load the branch address from the dashboard or database."
+    },
+    {
+      "case": "Payment",
+      "message": "Can I pay by UPI?",
+      "expected_intent": "payment",
+      "actual_intent": "payment",
+      "passed": true,
+      "response": "A production version can expose the payment methods configured in the retail database. This reconstruction does not process payments."
+    },
+    {
+      "case": "Support",
+      "message": "I have a complaint",
+      "expected_intent": "support",
+      "actual_intent": "support",
+      "passed": true,
+      "response": "For unresolved support cases, keep the order ID and registered contact details ready for the customer-support team."
+    },
+    {
+      "case": "Fallback",
+      "message": "Tell me a random joke",
+      "expected_intent": "fallback",
+      "actual_intent": "fallback",
+      "passed": true,
+      "response": "I can help with products, order status, delivery, returns, store information, payments, and general customer support. Please rephrase your question with a little more detail."
+    }
+  ],
+  "passed": 9,
+  "total": 9
+}

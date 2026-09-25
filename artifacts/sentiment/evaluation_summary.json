@@ -1,0 +1,14 @@
+{
+  "component": "sentiment_analysis",
+  "method": "TF-IDF vectorization with 1-2 grams + Logistic Regression",
+  "train_samples": 283,
+  "test_samples": 95,
+  "accuracy": 1.0,
+  "classes": [
+    "negative",
+    "neutral",
+    "positive"
+  ],
+  "api_endpoint": "POST /analyze-sentiment",
+  "note": "These are reconstruction results on a controlled synthetic retail sentiment dataset; they are not original internship metrics."
+}

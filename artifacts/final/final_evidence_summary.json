@@ -1,0 +1,62 @@
+{
+  "project": "AI-Powered Smart Retail & Customer Intelligence Platform",
+  "status": "final_evidence_package_complete",
+  "reconstructed_project": true,
+  "regression_suite": {
+    "status": "passed",
+    "pytest_output": ".......................................                                  [100%]\n39 passed in 1.20s"
+  },
+  "model_evaluation": {
+    "product_controlled_cv_accuracy": 1.0,
+    "product_challenge_accuracy": 0.6,
+    "sentiment_controlled_cv_accuracy": 1.0,
+    "sentiment_challenge_accuracy": 0.3888888888888889,
+    "face_controlled_accuracy": 1.0,
+    "face_note": "Controlled perturbation benchmark for the lightweight reconstructed face-verification demo; not a biometric validation study or an original internship metric."
+  },
+  "api": {
+    "path_count": 7,
+    "paths": [
+      "/analyze-sentiment",
+      "/chatbot",
+      "/classify-product",
+      "/dashboard/stats",
+      "/health",
+      "/health/ready",
+      "/recognize-face"
+    ],
+    "docs": [
+      "/docs",
+      "/redoc",
+      "/openapi.json"
+    ]
+  },
+  "end_to_end": {
+    "passed": 5,
+    "total": 5
+  },
+  "deployment": {
+    "dockerfile_exists": true,
+    "compose_exists": true,
+    "env_example_exists": true,
+    "docker_cli_available": false,
+    "docker_build": false,
+    "docker_build_output_tail": "Docker CLI unavailable in execution environment; build not executed.",
+    "deployment_configuration_validated": true,
+    "overall_runtime_status": "runtime_not_executed"
+  },
+  "evidence_directories": [
+    "artifacts/product",
+    "artifacts/face",
+    "artifacts/sentiment",
+    "artifacts/chatbot",
+    "artifacts/integration",
+    "artifacts/testing",
+    "artifacts/evaluation",
+    "artifacts/api",
+    "artifacts/deployment",
+    "artifacts/end_to_end",
+    "artifacts/final"
+  ],
+  "interpretation": "All artifacts are reconstructed/re-implemented project evidence. Controlled perfect scores are not presented as evidence of real-world generalization. Docker runtime was not executed because the Docker CLI was unavailable in the execution environment."
+}

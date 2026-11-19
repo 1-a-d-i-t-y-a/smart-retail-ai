@@ -50,6 +50,22 @@ flowchart TD
 
 ---
 
+## Visual Evidence & System Screenshots
+
+| Interactive OpenAPI / Swagger Documentation | Unified Multi-Service Pipeline |
+| :---: | :---: |
+| ![FastAPI OpenAPI Documentation](artifacts/api/api_documentation_evidence.png) | ![Unified Integration Pipeline](artifacts/integration/unified_integration_evidence.png) |
+
+| Biometric Face Verification Analysis | Sentiment Model Classification Report |
+| :---: | :---: |
+| ![Face Verification Analysis](artifacts/face/face_verification_summary.png) | ![Sentiment Classification Matrix](artifacts/sentiment/sentiment_analysis_evidence.png) |
+
+| Deterministic Retail Chatbot | Container Deployment Verification |
+| :---: | :---: |
+| ![Chatbot Execution Flow](artifacts/chatbot/chatbot_evidence.png) | ![Docker Deployment Verification](artifacts/deployment/deployment_evidence.png) |
+
+---
+
 ## Technology Stack
 
 * **Language & Runtime:** Python 3.11 / 3.12

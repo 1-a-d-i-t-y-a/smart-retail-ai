@@ -15,9 +15,17 @@ _LOCK = Lock()
 def increment(name: str) -> None:
     with _LOCK:
         COUNTERS["total_requests"] += 1
-        COUNTERS[name] += 1
+        if name in COUNTERS:
+            COUNTERS[name] += 1
 
 
 def snapshot() -> dict:
     with _LOCK:
         return dict(COUNTERS)
+
+
+def reset() -> None:
+    """Reset counters to zero (useful for isolated testing)."""
+    with _LOCK:
+        for key in COUNTERS:
+            COUNTERS[key] = 0

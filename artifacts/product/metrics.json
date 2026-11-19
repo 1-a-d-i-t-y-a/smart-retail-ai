@@ -72,5 +72,7 @@
     "shoe"
   ],
   "train_samples": 240,
-  "test_samples": 60
+  "test_samples": 60,
+  "challenge_samples": 20,
+  "challenge_accuracy": 1.0
 }

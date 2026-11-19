@@ -9,23 +9,25 @@ import cv2
 import numpy as np
 from skimage.metrics import structural_similarity as ssim
 
-logger = logging.getLogger(__name__)
+from app.config import settings
 
-ROOT = Path(__file__).resolve().parents[2]
-DB_PATH = ROOT / "models" / "face_db.pkl"
-SYSTEM_CASCADE = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
-LOCAL_CASCADE = ROOT / "data" / "haarcascades" / "haarcascade_frontalface_default.xml"
+logger = logging.getLogger(__name__)
 
 
 def _get_cascade_detector() -> cv2.CascadeClassifier | None:
-    if Path(SYSTEM_CASCADE).exists():
-        detector = cv2.CascadeClassifier(SYSTEM_CASCADE)
+    # 1. Configured / local cascade path
+    if settings.cascade_path.exists():
+        detector = cv2.CascadeClassifier(str(settings.cascade_path))
         if not detector.empty():
             return detector
-    if LOCAL_CASCADE.exists():
-        detector = cv2.CascadeClassifier(str(LOCAL_CASCADE))
+
+    # 2. System OpenCV cascade path
+    system_cascade = Path(cv2.data.haarcascades) / "haarcascade_frontalface_default.xml"
+    if system_cascade.exists():
+        detector = cv2.CascadeClassifier(str(system_cascade))
         if not detector.empty():
             return detector
+
     logger.warning("No valid Haar Cascade XML found for face detection.")
     return None
 
@@ -35,7 +37,12 @@ def _detect_largest_face(gray: np.ndarray):
     if detector is None or detector.empty():
         return None
     try:
-        faces = detector.detectMultiScale(gray, scaleFactor=1.08, minNeighbors=5, minSize=(60, 60))
+        faces = detector.detectMultiScale(
+            gray,
+            scaleFactor=1.05,
+            minNeighbors=4,
+            minSize=(40, 40),
+        )
         if len(faces) == 0:
             return None
         return max(faces, key=lambda r: r[2] * r[3])
@@ -67,39 +74,35 @@ def _similarity(query: np.ndarray, reference: np.ndarray) -> tuple[float, float,
     return combined, ssim_score, corr_score
 
 
-def build_face_db(reference_image: Path, threshold: float = 0.52) -> None:
-    image = cv2.imread(str(reference_image))
-    if image is None:
-        raise ValueError(f"Cannot read reference image: {reference_image}")
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    box = _detect_largest_face(gray)
-    if box is None:
-        raise ValueError("No face detected in reference image")
-    x, y, w, h = box
-    face = gray[y:y + h, x:x + w]
-    db = {
-        "person_01": _embedding(face),
-        "threshold": float(threshold),
-        "reference_bbox": [int(x), int(y), int(w), int(h)],
-    }
-    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with open(DB_PATH, "wb") as f:
-        pickle.dump(db, f)
-
-
 @lru_cache(maxsize=1)
-def _load_face_db() -> dict:
-    if not DB_PATH.exists():
-        raise FileNotFoundError(f"Face database file {DB_PATH} not found.")
-    with open(DB_PATH, "rb") as f:
-        return pickle.load(f)
+def load_face_db() -> dict:
+    db_path = settings.face_db_path
+    if not db_path.exists():
+        raise FileNotFoundError(
+            f"Face database file {db_path} not found. "
+            "Please initialize the face database using scripts/build_all_models.py."
+        )
+    try:
+        with open(db_path, "rb") as f:
+            return pickle.load(f)
+    except Exception as exc:
+        logger.exception("Failed to load face database from %s: %s", db_path, exc)
+        raise RuntimeError(f"Corrupt face database file: {exc}") from exc
 
 
 def recognize_face(image_bytes: bytes) -> dict:
+    """Verify query face image against registered customer database.
+
+    Educational/Reconstruction Scope:
+    This module uses OpenCV Haar Cascade face detection and dual Structural
+    Similarity (SSIM) + Pearson correlation matching. It is intended for
+    demonstration and retail customer check-in simulation, not biometric security.
+    """
     arr = np.frombuffer(image_bytes, dtype=np.uint8)
     img = cv2.imdecode(arr, cv2.IMREAD_COLOR)
     if img is None:
-        raise ValueError("Could not decode image")
+        raise ValueError("Could not decode image buffer.")
+
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     box = _detect_largest_face(gray)
     if box is None:
@@ -109,12 +112,12 @@ def recognize_face(image_bytes: bytes) -> dict:
             "distance": None,
             "similarity": None,
             "bbox": None,
-            "message": "No face detected",
+            "message": "No face detected in query image.",
         }
 
     x, y, w, h = box
     query = _normalize_face(gray[y:y + h, x:x + w])
-    db = _load_face_db()
+    db = load_face_db()
 
     scores = {}
     for name, record in db.items():
@@ -135,14 +138,15 @@ def recognize_face(image_bytes: bytes) -> dict:
         }
 
     person, similarity = max(scores.items(), key=lambda item: item[1])
-    threshold = float(db.get("threshold", 0.52))
+    threshold = float(db.get("threshold", 0.50))
     matched = similarity >= threshold
-    distance = 1.0 - similarity
+    distance = max(0.0, 1.0 - similarity)
+
     return {
         "matched": bool(matched),
         "person": person if matched else None,
-        "distance": float(distance),
-        "similarity": float(similarity),
+        "distance": float(round(distance, 4)),
+        "similarity": float(round(similarity, 4)),
         "bbox": [int(x), int(y), int(w), int(h)],
         "message": "Face matched" if matched else "Face detected but no registered match",
     }

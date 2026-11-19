@@ -8,14 +8,18 @@ from fastapi.testclient import TestClient
     "message,expected_intent",
     [
         ("Hello, can you help me?", "greeting"),
-        ("Can you recommend headphones?", "products"),
+        ("Namaste! Good morning", "greeting"),
         ("Where is my order?", "order_status"),
-        ("How long will delivery take?", "shipping"),
-        ("I want a refund", "returns"),
-        ("What are the store hours?", "store_info"),
-        ("Can I pay by UPI?", "payment"),
-        ("I have a complaint", "support"),
-        ("Tell me a random story please", "fallback"),
+        ("Can I track my order update?", "order_status"),
+        ("How long will shipping and delivery take?", "shipping"),
+        ("Can I return this shoe if the size does not fit?", "returns"),
+        ("I want a refund for my damaged item", "refunds"),
+        ("When will I get my refund back?", "refunds"),
+        ("What are your store hours and address?", "store_info"),
+        ("Can you recommend high quality headphones?", "products"),
+        ("Can I pay with credit card or UPI?", "payment"),
+        ("I have a complaint, connect me to customer service", "support"),
+        ("Quantum physics teleportation algorithm", "fallback"),
     ],
 )
 def test_chatbot_intents(client: TestClient, message: str, expected_intent: str):
@@ -26,6 +30,17 @@ def test_chatbot_intents(client: TestClient, message: str, expected_intent: str)
     assert len(data["response"]) > 0
 
 
+def test_chatbot_punctuation_normalization(client: TestClient):
+    response = client.post("/chatbot", json={"message": "!!!HELLO??? WORLD!!!"})
+    assert response.status_code == 200
+    assert response.json()["intent"] == "greeting"
+
+
 def test_chatbot_empty_message_validation(client: TestClient):
     response = client.post("/chatbot", json={"message": ""})
+    assert response.status_code == 422
+
+
+def test_chatbot_whitespace_validation(client: TestClient):
+    response = client.post("/chatbot", json={"message": "    \n\t  "})
     assert response.status_code == 422

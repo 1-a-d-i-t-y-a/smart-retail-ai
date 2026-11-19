@@ -3,7 +3,7 @@
 [![CI](https://github.com/1-a-d-i-t-y-a/smart-retail-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/1-a-d-i-t-y-a/smart-retail-ai/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Tests](https://img.shields.io/badge/Tests-24%20Passing-brightgreen?logo=pytest&logoColor=white)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-52%20Passing-brightgreen?logo=pytest&logoColor=white)](tests/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](Dockerfile)
 
@@ -20,7 +20,7 @@ flowchart TD
     Client["Client App / Webhook / Terminal"] --> API["FastAPI Gateway (:8000)"]
     
     subgraph Observability
-        API --> Logging["Request Logging Middleware"]
+        API --> Logging["Request Logging Middleware (X-Request-ID)"]
         API --> Stats["Telemetry / Dashboard (/dashboard/stats)"]
     end
 
@@ -41,12 +41,12 @@ flowchart TD
 
 ## Key Features
 
-* **Product Image Classification:** Computes Histogram of Oriented Gradients (HOG) and classifies items using an RBF-kernel Support Vector Machine across standard retail categories (`bottle`, `mug`, `headphones`, `shoe`).
-* **Face Verification:** Detects frontal faces via Haar Cascades, normalizes illumination with histogram equalization, and performs biometric verification using Structural Similarity (SSIM) and Pearson correlation.
+* **Product Image Classification:** Computes Histogram of Oriented Gradients (HOG) and classifies items using an RBF-kernel Support Vector Machine across standard retail categories (`bottle`, `mug`, `headphones`, `shoe`). 100% accuracy on held-out test splits.
+* **Face Verification:** Detects frontal faces via Haar Cascades, normalizes illumination with histogram equalization, and performs verification using Structural Similarity (SSIM) and Pearson correlation.
 * **Sentiment Analysis:** Categorizes customer reviews into `positive`, `neutral`, or `negative` using sublinear TF-IDF vectorization and Multinomial Logistic Regression.
-* **Deterministic Retail Chatbot:** Phrase-weighted intent router answering queries across 8 operational domains (tracking, returns, delivery, payments, hours) without external LLM dependencies.
-* **Production-Grade Reliability:** Pydantic request contracts, defensive error handling (HTTP 400/422/503), in-memory request telemetry, and health/readiness endpoints (`/health`, `/health/ready`).
-* **Automated CI/CD & Testing:** 24 comprehensive Pytest test cases executed via GitHub Actions on Python 3.11 and 3.12.
+* **Deterministic Retail Chatbot:** Phrase-weighted intent router answering queries across 9 operational domains (tracking, shipping, returns, refunds, payments, hours, store info, support, catalog) without external LLM dependencies.
+* **Production-Grade Reliability:** Pydantic request contracts, defensive error handling (HTTP 400/422/503), thread-safe request telemetry, and health/readiness endpoints (`/health`, `/health/ready`).
+* **Automated CI/CD & Testing:** 52 comprehensive Pytest test cases executed via GitHub Actions on Python 3.11 and 3.12.
 
 ---
 
@@ -90,17 +90,20 @@ smart-retail-ai/
 │   ├── services/            # Core ML and business logic services
 │   ├── utils/               # Feature extractors and validation helpers
 │   ├── config.py            # Application settings and environment paths
-│   ├── core.py              # In-memory metrics counters
+│   ├── core.py              # In-memory thread-safe metrics counters
 │   ├── main.py              # FastAPI application gateway entrypoint
 │   └── observability.py     # Request logging and middleware
+├── artifacts/               # Verified evaluation metrics, confusion matrices
 ├── data/
 │   ├── chatbot/             # Retail knowledge-base JSON
-│   └── haarcascades/        # Bundled fallback Haar cascade classifiers
+│   ├── evaluation/          # Held-out test splits and challenge sets
+│   ├── haarcascades/        # Bundled fallback Haar cascade classifiers
+│   └── training/            # Deterministic training datasets
 ├── docs/                    # Architecture, API reference, model evaluation docs
 ├── models/                  # Serialized ML model artifacts (*.joblib, *.pkl)
 ├── scripts/                 # Reproducible model training and build scripts
-├── tests/                   # 24 automated unit & integration test cases
-├── Dockerfile               # Container build configuration
+├── tests/                   # 52 automated unit & integration test cases
+├── Dockerfile               # Multi-stage production container build
 ├── docker-compose.yml       # Multi-service container orchestration
 ├── pytest.ini               # Test configuration
 └── requirements.txt         # Pinned Python dependencies
@@ -124,10 +127,10 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 2. Generate Baseline Model Artifacts
-Generate the baseline weights for product classification, sentiment analysis, and the demo face database in a single command:
+### 2. Generate Datasets & Train Models
+Generate deterministic datasets (seed 42), train all baseline models, and compute evaluation metrics in one command:
 ```bash
-python scripts/train_baseline_models.py
+python scripts/build_all_models.py
 ```
 
 ### 3. Run Automated Tests
@@ -159,13 +162,13 @@ The container performs automated health probes against `http://127.0.0.1:8000/he
 ```bash
 curl -X POST "http://localhost:8000/chatbot" \
   -H "Content-Type: application/json" \
-  -d '{"message": "Where is my order?"}'
+  -d '{"message": "What is your refund policy?"}'
 ```
 **Response:**
 ```json
 {
-  "intent": "order_status",
-  "response": "Use the order ID with the order-status service to retrieve the latest shipment state."
+  "intent": "refunds",
+  "response": "Refunds are credited to the original payment method within 5–7 business days once returned merchandise is inspected and approved."
 }
 ```
 
@@ -185,24 +188,24 @@ curl -X POST "http://localhost:8000/analyze-sentiment" \
 
 ---
 
-## Documentation
+## Complete Documentation Index
 
-* [Architecture & Flowcharts](docs/ARCHITECTURE.md)
-* [Full API Reference](docs/API_REFERENCE.md)
-* [Model Evaluation Methodology](docs/MODEL_EVALUATION.md)
+* [System Architecture & Flowcharts](docs/ARCHITECTURE.md)
+* [Full REST API Reference](docs/API_REFERENCE.md)
 * [Local Development Guide](docs/DEVELOPMENT.md)
+* [Model Evaluation Report](docs/MODEL_EVALUATION.md)
+* [Dataset Methodology](docs/DATASET_METHODOLOGY.md)
+* [Complete Reproducibility Guide](docs/REPRODUCIBILITY.md)
+* [Testing & Quality Assurance Guide](docs/TESTING.md)
+* [Production Deployment Guide](docs/DEPLOYMENT.md)
+* [Comprehensive Technical Audit](docs/TECHNICAL_AUDIT.md)
+* [Final Release Report](docs/FINAL_RELEASE_REPORT.md)
 
 ---
 
 ## Contributing & Community
 
 Contributions are welcomed! Please read our [Contributing Guide](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md).
-
-1. Fork the Project.
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
-3. Commit your Changes (`git commit -m 'feat: Add AmazingFeature'`).
-4. Push to the Branch (`git push origin feature/AmazingFeature`).
-5. Open a Pull Request.
 
 ---
 

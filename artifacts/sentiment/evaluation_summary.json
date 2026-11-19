@@ -10,5 +10,5 @@
     "positive"
   ],
   "api_endpoint": "POST /analyze-sentiment",
-  "note": "These are reconstruction results on a controlled synthetic retail sentiment dataset; they are not original internship metrics."
+  "note": "Controlled synthetic retail sentiment evaluation dataset with reproducible random seed 42."
 }

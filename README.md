@@ -3,13 +3,13 @@
 [![CI](https://github.com/1-a-d-i-t-y-a/smart-retail-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/1-a-d-i-t-y-a/smart-retail-ai/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Tests](https://img.shields.io/badge/Tests-96%20Passing-brightgreen?logo=pytest&logoColor=white)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-129%20Passing-brightgreen?logo=pytest&logoColor=white)](tests/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](Dockerfile)
 
 A modular, reproducible, offline-first AI/ML retail backend combining **product image classification**, **face verification**, **customer sentiment analysis**, and a **deterministic retail chatbot**, unified under a high-performance **FastAPI gateway**.
 
-> **Academic Provenance Notice:** This platform reconstructs an intelligent retail automation system using classical, verifiable machine learning algorithms (HOG + SVM, Haar Cascades, SSIM, TF-IDF + Logistic Regression). Its evaluation benchmarks reflect reproducible local validation experiments rather than proprietary third-party telemetry.
+> **Academic Provenance Notice:** This platform reconstructs an intelligent retail automation system using classical, verifiable machine learning algorithms (HOG + SVM, Haar Cascades, SSIM, TF-IDF + Logistic Regression). Its evaluation benchmarks reflect reproducible local validation experiments on controlled synthetic fixtures rather than proprietary third-party telemetry.
 
 ---
 
@@ -41,12 +41,12 @@ flowchart TD
 
 ## Key Features
 
-* **Product Image Classification:** Computes Histogram of Oriented Gradients (HOG) and classifies items using an RBF-kernel Support Vector Machine across standard retail categories (`bottle`, `mug`, `headphones`, `shoe`). 100% accuracy on held-out test splits.
-* **Face Verification:** Detects frontal faces via Haar Cascades, normalizes illumination with histogram equalization, and performs verification using Structural Similarity (SSIM) and Pearson correlation.
-* **Sentiment Analysis:** Categorizes customer reviews into `positive`, `neutral`, or `negative` using sublinear TF-IDF vectorization and Multinomial Logistic Regression.
+* **Product Image Classification:** Computes Histogram of Oriented Gradients (HOG) and classifies items using an RBF-kernel Support Vector Machine across standard retail categories (`bottle`, `mug`, `headphones`, `shoe`). Achieved 100% accuracy on the controlled synthetic held-out benchmark (60/60). This benchmark demonstrates reproducible behavior on generated data and should not be interpreted as real-world retail generalization.
+* **Face Verification:** Educational demonstration prototype using OpenCV Haar Cascade detection, illumination normalization, and Structural Similarity (SSIM) / Pearson correlation matching. Evaluated on 3 identity verification cases (100% accuracy) with a separate functional non-face distractor check (passed). Not intended as biometric-grade or production-secure authentication.
+* **Sentiment Analysis:** Categorizes customer reviews into `positive`, `neutral`, or `negative` using sublinear TF-IDF vectorization and Multinomial Logistic Regression. Achieved 100% on the controlled template held-out benchmark (95/95) and 55% (11/20) on hand-written challenge reviews, reflecting classical n-gram limitations on nuanced natural language.
 * **Deterministic Retail Chatbot:** Phrase-weighted intent router answering queries across 9 operational domains (tracking, shipping, returns, refunds, payments, hours, store info, support, catalog) without external LLM dependencies.
-* **Defensive Reliability:** Pydantic request contracts, defensive error handling (HTTP 400/422/503), thread-safe request telemetry, and health/readiness endpoints (`/health`, `/health/ready`).
-* **Automated CI/CD & Testing:** 96 comprehensive Pytest test cases executed via GitHub Actions on Python 3.11 and 3.12.
+* **Defensive Reliability:** Pydantic request contracts, strict Content-Type allowlist normalization, pre-decode Pillow dimension & decompression bomb defense, bounded upload reads with HTTP 413 responses, defensive error handling (HTTP 400/413/422/503), thread-safe request telemetry, and health/readiness endpoints (`/health`, `/health/ready`).
+* **Automated CI/CD & Testing:** 129 comprehensive Pytest test cases executed via GitHub Actions on Python 3.11 and 3.12, including packaging security and release verification.
 
 ---
 
@@ -71,7 +71,7 @@ flowchart TD
 * **Language & Runtime:** Python 3.11 / 3.12
 * **Web Framework:** FastAPI, Uvicorn, Starlette
 * **Machine Learning:** Scikit-Learn, NumPy, SciPy, Joblib
-* **Computer Vision:** OpenCV (`opencv-python-headless`), Scikit-Image (`skimage`)
+* **Computer Vision:** OpenCV (`opencv-python-headless`), Scikit-Image (`skimage`), Pillow (`PIL`)
 * **Validation & Observability:** Pydantic v2, Python Logging
 * **Testing & Quality:** Pytest, HTTPX, Ruff
 * **DevOps & Containers:** Docker, Docker Compose, GitHub Actions
@@ -82,31 +82,33 @@ flowchart TD
 
 ```text
 smart-retail-ai/
-â”œâ”€â”€ .github/workflows/       # GitHub Actions CI workflow
-â”œâ”€â”€ app/
-â”‚   â”œâ”€â”€ api/                 # FastAPI route controllers
-â”‚   â”œâ”€â”€ models/              # Module declarations
-â”‚   â”œâ”€â”€ schemas/             # Pydantic input/output schemas
-â”‚   â”œâ”€â”€ services/            # Core ML and business logic services
-â”‚   â”œâ”€â”€ utils/               # Feature extractors and validation helpers
-â”‚   â”œâ”€â”€ config.py            # Application settings and environment paths
-â”‚   â”œâ”€â”€ core.py              # In-memory thread-safe metrics counters
-â”‚   â”œâ”€â”€ main.py              # FastAPI application gateway entrypoint
-â”‚   â””â”€â”€ observability.py     # Request logging and middleware
-â”œâ”€â”€ artifacts/               # Verified evaluation metrics, confusion matrices
-â”œâ”€â”€ data/
-â”‚   â”œâ”€â”€ chatbot/             # Retail knowledge-base JSON
-â”‚   â”œâ”€â”€ evaluation/          # Held-out test splits and challenge sets
-â”‚   â”œâ”€â”€ haarcascades/        # Bundled fallback Haar cascade classifiers
-â”‚   â””â”€â”€ training/            # Deterministic training datasets
-â”œâ”€â”€ docs/                    # Architecture, API reference, model evaluation docs
-â”œâ”€â”€ models/                  # Serialized ML model artifacts (*.joblib, *.pkl)
-â”œâ”€â”€ scripts/                 # Reproducible model training and build scripts
-â”œâ”€â”€ tests/                   # 96 automated unit & integration test cases
-â”œâ”€â”€ Dockerfile               # Multi-stage production container build
-â”œâ”€â”€ docker-compose.yml       # Multi-service container orchestration
-â”œâ”€â”€ pytest.ini               # Test configuration
-â””â”€â”€ requirements.txt         # Version-constrained Python dependencies
+|-- .github/workflows/       # GitHub Actions CI workflow
+|-- app/
+|   |-- api/                 # FastAPI route controllers
+|   |-- models/              # Module declarations
+|   |-- schemas/             # Pydantic input/output schemas
+|   |-- services/            # Core ML and business logic services
+|   |-- utils/               # Feature extractors and validation helpers
+|   |-- config.py            # Application settings and environment paths
+|   |-- core.py              # In-memory thread-safe metrics counters
+|   |-- main.py              # FastAPI application gateway entrypoint
+|   `-- observability.py     # Request logging and middleware
+|-- artifacts/               # Verified evaluation metrics, confusion matrices
+|-- data/
+|   |-- chatbot/             # Retail knowledge-base JSON
+|   |-- evaluation/          # Held-out test splits and challenge sets
+|   |-- fixtures/            # Tracked canonical face input fixtures
+|   |-- haarcascades/        # Bundled fallback Haar cascade classifiers
+|   `-- training/            # Deterministic training datasets
+|-- docs/                    # Architecture, API reference, model evaluation docs
+|-- models/                  # Serialized ML model artifacts (*.joblib, *.pkl)
+|-- scripts/                 # Reproducible model training and build scripts
+|-- tests/                   # Automated unit & integration test cases
+|-- Dockerfile               # Single-stage container build
+|-- docker-compose.yml       # Multi-service container orchestration
+|-- pytest.ini               # Test configuration
+|-- .env.example             # Safe environment variable configuration template
+`-- requirements.txt         # Version-constrained Python dependencies
 ```
 
 ---
@@ -168,7 +170,7 @@ curl -X POST "http://localhost:8000/chatbot" \
 ```json
 {
   "intent": "refunds",
-  "response": "Refunds are credited to the original payment method within 5â€“7 business days once returned merchandise is inspected and approved."
+  "response": "Refunds are credited to the original payment method within 5-7 business days once returned merchandise is inspected and approved."
 }
 ```
 
@@ -212,6 +214,3 @@ Contributions are welcomed! Please read our [Contributing Guide](CONTRIBUTING.md
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-
-

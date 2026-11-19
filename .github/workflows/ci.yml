@@ -43,3 +43,17 @@ jobs:
       - name: Run automated test suite
         run: |
           pytest tests/ -v --maxfail=1
+
+      - name: Build and verify release distribution bundle (Python 3.12 only)
+        if: matrix.python-version == '3.12'
+        run: |
+          python scripts/package_release.py
+
+      - name: Upload release distribution artifact (Python 3.12 only)
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: smart-retail-ai-v1.2.0-dist
+          path: dist/
+          retention-days: 14
+          if-no-files-found: error

@@ -71,3 +71,9 @@ Natural variation injection appends conversational sentence closers (e.g. *"Over
   - Distinct individual with different facial dimensions and feature geometries to verify false-acceptance rejection.
 - **Distractor Probe (`data/evaluation/face/no_face_distractor.png`):**
   - Geometric non-face canvas to verify that the detector cleanly reports `No face detected` rather than hallucinating an identity.
+
+### 4.2 Tracked Fixture Provenance
+Face generation sources are decoupled from output artifacts and tracked canonically under `data/fixtures/face/`:
+- `canonical_reference.png`: SHA-256 `19aef5180b9daed0e5f2dec591f420876bb38ef2dd8cfc82cb83ca47c88b9b55`
+- `canonical_negative.png`: SHA-256 `1452b1a31d025d6d1b105f322532135dfff4e3c642c8e174a85d7b4153ecc908`
+- `scripts/generate_datasets.py` reads exclusively from this directory, ensuring generation is fully self-contained and reproducible.

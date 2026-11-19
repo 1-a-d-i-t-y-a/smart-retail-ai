@@ -7,10 +7,10 @@
   "reconstructed_project": true,
   "regression_suite": {
     "status": "passed",
-    "tests_collected": 96,
-    "tests_passed": 96,
+    "tests_collected": 129,
+    "tests_passed": 129,
     "tests_failed": 0,
-    "pytest_summary": "96 passed in ~6s"
+    "pytest_summary": "129 passed in ~5.8s"
   },
   "model_evaluation": {
     "product": {
@@ -20,7 +20,7 @@
       "test_accuracy": 1.0,
       "challenge_samples": 20,
       "challenge_accuracy": 1.0,
-      "note": "Test and challenge sets from scripts/evaluate_models.py on synthetically generated data with seed 42."
+      "note": "Achieved 100% accuracy on controlled synthetic held-out benchmark (60/60). Demonstrates reproducible behavior on generated data and should not be interpreted as real-world retail generalization."
     },
     "sentiment": {
       "method": "TF-IDF (1-2 grams) + Logistic Regression",
@@ -29,7 +29,7 @@
       "test_accuracy": 1.0,
       "challenge_samples": 20,
       "challenge_accuracy": 0.55,
-      "note": "Challenge set is hand-crafted paraphrased retail statements designed to exceed training distribution."
+      "note": "Achieved 100% on template-based held-out test set; 55% on hand-crafted challenge set reflecting classical n-gram limitations on nuanced natural language."
     },
     "face_verification": {
       "method": "OpenCV Haar Cascade + SSIM/Pearson correlation",
@@ -39,7 +39,7 @@
       "threshold": 0.5,
       "functional_tests": 1,
       "functional_note": "No-face distractor test validates the 'no face detected' code path; not counted in accuracy denominator.",
-      "note": "Lightweight reconstructed demo; not a biometric validation study."
+      "note": "Educational demonstration prototype; not biometric-grade or production-secure."
     }
   },
   "upload_validation": {
@@ -47,6 +47,7 @@
     "http_413_implemented": true,
     "pillow_header_check": true,
     "decompression_bomb_protection": true,
+    "allowed_mime_types": ["image/jpeg", "image/png", "image/webp", "image/bmp"],
     "min_dimension_px": 10,
     "max_dimension_px": 4096,
     "max_bytes": 5242880
@@ -55,6 +56,8 @@
     "secret_scan": "PASS",
     "archive_path_traversal": "PASS",
     "archive_absolute_paths": "PASS",
+    "archive_windows_drive_paths": "PASS",
+    "archive_unc_paths": "PASS",
     "archive_symlinks": "PASS",
     "exclusion_rules_tested": true,
     "exclusion_report": "artifacts/packaging/exclusion_test_results.txt"
@@ -80,14 +83,17 @@
     "docker_cli_available": false,
     "docker_build_executed": false,
     "docker_build_note": "Docker CLI unavailable in execution environment; configuration inspected against Dockerfile source only.",
+    "dockerfile_build_type": "single-stage",
     "dockerfile_base_image": "python:3.12-slim",
     "dockerfile_user": "appuser",
     "dockerfile_port": 8000,
     "dockerfile_healthcheck": "GET /health/ready",
+    "compose_service_name": "smart-retail-api",
     "deployment_configuration_validated": true
   },
   "distribution": {
     "zip_name": "smart-retail-ai-v1.2.0.zip",
+    "sha256": "ee2f24bbf03bd223b3eb97186c328c83e31f7d2dff606043a2cb338ccef75666",
     "sha256_file": "dist/SHA256SUMS.txt",
     "export_manifest": "dist/EXPORT_MANIFEST.md",
     "clean_room_verified": true

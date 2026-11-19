@@ -24,7 +24,7 @@ def test_face_recognition_corrupt_image(client: TestClient, invalid_image_bytes:
 def test_face_recognition_registered_match(client: TestClient):
     ref_img_path = ROOT / "data" / "training" / "face" / "person_01_reference.png"
     if not ref_img_path.exists():
-        ref_img_path = ROOT / "artifacts" / "face" / "reference_annotated.png"
+        ref_img_path = ROOT / "data" / "fixtures" / "face" / "canonical_reference.png"
 
     with open(ref_img_path, "rb") as f:
         img_bytes = f.read()
@@ -42,7 +42,7 @@ def test_face_recognition_registered_match(client: TestClient):
 def test_face_recognition_unregistered_negative(client: TestClient):
     neg_path = ROOT / "data" / "evaluation" / "face" / "negative_other_face.png"
     if not neg_path.exists():
-        neg_path = ROOT / "artifacts" / "face" / "negative_other_face_annotated.png"
+        neg_path = ROOT / "data" / "fixtures" / "face" / "canonical_negative.png"
 
     with open(neg_path, "rb") as f:
         img_bytes = f.read()
@@ -89,7 +89,7 @@ def test_face_recognition_missing_database(client: TestClient, sample_image_byte
         # Use the registered reference image — it triggers the DB lookup which will fail.
         ref_img_path = ROOT / "data" / "training" / "face" / "person_01_reference.png"
         if not ref_img_path.exists():
-            ref_img_path = ROOT / "artifacts" / "face" / "reference_annotated.png"
+            ref_img_path = ROOT / "data" / "fixtures" / "face" / "canonical_reference.png"
         with open(ref_img_path, "rb") as f:
             img_bytes = f.read()
         files = {"file": ("face.png", img_bytes, "image/png")}

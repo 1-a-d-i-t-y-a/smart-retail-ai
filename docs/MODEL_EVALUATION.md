@@ -29,6 +29,8 @@ All metrics below are 100% reproducible and generated locally without external c
 ### 2.2 Test Set Performance
 $$\text{Overall Accuracy} = 100.00\% \quad (60/60)$$
 
+> **Evaluation Notice:** Achieved 100% accuracy on the controlled synthetic held-out benchmark (60/60). This benchmark demonstrates reproducible behavior on generated data and should not be interpreted as real-world retail generalization.
+
 | Class | Precision | Recall | F1-Score | Support |
 | :--- | :---: | :---: | :---: | :---: |
 | **Bottle** | 1.000 | 1.000 | 1.000 | 15 |

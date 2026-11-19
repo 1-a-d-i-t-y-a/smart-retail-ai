@@ -1,17 +1,20 @@
 Exclusion Rule Verification — Smart Retail AI v1.2.0
-Archive: smart-retail-ai-v1.2.0.zip (430 files)
+Candidate Files: 435
 ============================================================
-[PASS] .git directory excluded: pattern '.git/'
-[PASS] __pycache__ excluded: pattern '__pycache__/'
-[PASS] .pytest_cache excluded: pattern '.pytest_cache/'
-[PASS] .pyc files excluded: pattern '.pyc'
-[PASS] .pem files excluded: pattern '.pem'
-[PASS] .key files excluded: pattern '.key'
-[PASS] .log files excluded: pattern '.log'
-[PASS] .DS_Store excluded: pattern '.DS_Store'
-[PASS] Thumbs.db excluded: pattern 'Thumbs.db'
-[PASS] venv directory excluded: pattern '/venv/'
-[PASS] .venv directory excluded: pattern '/.venv/'
-[PASS] dist directory excluded: pattern 'dist/'
+[PASS] .git directory excluded
+[PASS] __pycache__ excluded
+[PASS] .pytest_cache excluded
+[PASS] .pyc files excluded
+[PASS] .pem files excluded
+[PASS] .key files excluded
+[PASS] .log files excluded
+[PASS] .DS_Store excluded
+[PASS] Thumbs.db excluded
+[PASS] desktop.ini excluded
+[PASS] venv directory excluded
+[PASS] .venv directory excluded
+[PASS] dist directory excluded
+[PASS] .env file excluded
+[PASS] .env.production excluded
 
 ALL RULES PASSED

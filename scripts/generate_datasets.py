@@ -30,7 +30,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 TRAIN_DIR = DATA_DIR / "training"
 EVAL_DIR = DATA_DIR / "evaluation"
-ARTIFACTS_DIR = ROOT / "artifacts"
+FIXTURES_DIR = DATA_DIR / "fixtures" / "face"
 
 
 def _draw_synthetic_product(class_name: str, rng: np.random.RandomState, noise_scale: int = 15) -> np.ndarray:
@@ -258,14 +258,14 @@ def generate_sentiment_datasets(seed: int = 42) -> None:
 
 
 def generate_face_datasets() -> None:
-    print("[3/3] Generating Face Verification Evaluation Pairs...")
+    print("[3/3] Generating Face Verification Evaluation Pairs from Canonical Fixtures...")
     face_train_dir = TRAIN_DIR / "face"
     face_eval_dir = EVAL_DIR / "face"
     face_train_dir.mkdir(parents=True, exist_ok=True)
     face_eval_dir.mkdir(parents=True, exist_ok=True)
 
-    # 1. Reference Face (copy from canonical artifacts if present, else synthesize)
-    ref_src = ARTIFACTS_DIR / "face" / "reference_annotated.png"
+    # 1. Reference Face (copy from tracked canonical fixture in data/fixtures/face/)
+    ref_src = FIXTURES_DIR / "canonical_reference.png"
     ref_dst = face_train_dir / "person_01_reference.png"
     if ref_src.exists():
         shutil.copyfile(ref_src, ref_dst)
@@ -274,13 +274,13 @@ def generate_face_datasets() -> None:
         cv2.circle(ref_face, (80, 80), 50, (120, 120, 120), -1)
         cv2.imwrite(str(ref_dst), ref_face)
 
-    # 2. Positive Query Face (reference with slight natural illumination shift)
+    # 2. Positive Query Face (reference with calibrated natural illumination shift)
     ref_img = cv2.imread(str(ref_dst))
     pos_query = np.clip(ref_img.astype(np.float32) * 1.05, 0, 255).astype(np.uint8)
     cv2.imwrite(str(face_eval_dir / "positive_query.png"), pos_query)
 
-    # 3. Negative Other Face
-    neg_src = ARTIFACTS_DIR / "face" / "negative_other_face_annotated.png"
+    # 3. Negative Other Face (copy from tracked canonical fixture in data/fixtures/face/)
+    neg_src = FIXTURES_DIR / "canonical_negative.png"
     neg_dst = face_eval_dir / "negative_other_face.png"
     if neg_src.exists():
         shutil.copyfile(neg_src, neg_dst)
@@ -288,12 +288,12 @@ def generate_face_datasets() -> None:
         neg_img = np.ones((160, 160, 3), dtype=np.uint8) * 100
         cv2.imwrite(str(neg_dst), neg_img)
 
-    # 4. No-face / Distractor Image
+    # 4. No-face / Distractor Image (functional test fixture)
     blank = np.ones((200, 200, 3), dtype=np.uint8) * 240
     cv2.circle(blank, (100, 100), 30, (200, 150, 100), -1)
     cv2.imwrite(str(face_eval_dir / "no_face_distractor.png"), blank)
 
-    print(f"  Generated face evaluation pairs in {face_eval_dir}")
+    print(f"  Generated face evaluation pairs in {face_eval_dir} from {FIXTURES_DIR}")
 
 
 def main():

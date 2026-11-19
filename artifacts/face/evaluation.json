@@ -3,59 +3,73 @@
     "cases": 3,
     "correct": 3,
     "accuracy": 1.0,
-    "threshold": 0.52,
-    "mean_positive_similarity": 0.8390991178813862,
-    "mean_negative_similarity": 0.3903354713933809,
-    "note": "Reconstructed face-verification demonstration using OpenCV Haar detection plus structural-similarity/correlation matching; not an original internship metric."
+    "threshold": 0.5,
+    "mean_positive_similarity": 0.9976499999999999,
+    "mean_negative_similarity": 0.2759,
+    "functional_cases": 1,
+    "functional_passed": 1,
+    "functional_note": "No-face distractor test validates the 'no face detected' code path; not counted in accuracy denominator.",
+    "note": "Face verification evaluation using OpenCV Haar Cascade and SSIM/Pearson correlation matching."
   },
   "results": [
     {
+      "case": "reference",
       "matched": true,
       "person": "person_01",
       "distance": 0.0,
       "similarity": 1.0,
       "bbox": [
-        13,
-        10,
-        106,
-        106
+        6,
+        8,
+        111,
+        111
       ],
       "message": "Face matched",
-      "case": "reference",
       "expected_match": true,
       "correct": true
     },
     {
+      "case": "positive_query",
       "matched": true,
       "person": "person_01",
-      "distance": 0.3218017642372275,
-      "similarity": 0.6781982357627725,
+      "distance": 0.0047,
+      "similarity": 0.9953,
       "bbox": [
-        13,
-        10,
-        105,
-        105
+        6,
+        8,
+        111,
+        111
       ],
       "message": "Face matched",
-      "case": "positive_query",
       "expected_match": true,
       "correct": true
     },
     {
+      "case": "negative_other_face",
       "matched": false,
       "person": null,
-      "distance": 0.6096645286066191,
-      "similarity": 0.3903354713933809,
+      "distance": 0.7241,
+      "similarity": 0.2759,
       "bbox": [
-        177,
-        65,
-        97,
-        97
+        284,
+        125,
+        127,
+        127
       ],
       "message": "Face detected but no registered match",
-      "case": "negative_other_face",
       "expected_match": false,
       "correct": true
+    }
+  ],
+  "functional_checks": [
+    {
+      "case": "no_face_distractor",
+      "type": "functional_test",
+      "matched": false,
+      "person": null,
+      "message": "No face detected in query image.",
+      "expected_matched": false,
+      "passed": true
     }
   ]
 }

@@ -1,18 +1,66 @@
 {
   "project": "AI-Powered Smart Retail & Customer Intelligence Platform",
+  "version": "1.2.0",
+  "branch": "engineering/reproducibility-and-release",
+  "generated": "2026-11-19",
   "status": "final_evidence_package_complete",
   "reconstructed_project": true,
   "regression_suite": {
     "status": "passed",
-    "pytest_output": ".......................................                                  [100%]\n39 passed in 1.20s"
+    "tests_collected": 129,
+    "tests_passed": 129,
+    "tests_failed": 0,
+    "pytest_summary": "129 passed in ~5.8s"
   },
   "model_evaluation": {
-    "product_controlled_cv_accuracy": 1.0,
-    "product_challenge_accuracy": 0.6,
-    "sentiment_controlled_cv_accuracy": 1.0,
-    "sentiment_challenge_accuracy": 0.3888888888888889,
-    "face_controlled_accuracy": 1.0,
-    "face_note": "Controlled perturbation benchmark for the lightweight reconstructed face-verification demo; not a biometric validation study or an original internship metric."
+    "product": {
+      "method": "HOG + RBF-kernel SVM",
+      "train_samples": 240,
+      "test_samples": 60,
+      "test_accuracy": 1.0,
+      "challenge_samples": 20,
+      "challenge_accuracy": 1.0,
+      "note": "Achieved 100% accuracy on controlled synthetic held-out benchmark (60/60). Demonstrates reproducible behavior on generated data and should not be interpreted as real-world retail generalization."
+    },
+    "sentiment": {
+      "method": "TF-IDF (1-2 grams) + Logistic Regression",
+      "train_samples": 283,
+      "test_samples": 95,
+      "test_accuracy": 1.0,
+      "challenge_samples": 20,
+      "challenge_accuracy": 0.55,
+      "note": "Achieved 100% on template-based held-out test set; 55% on hand-crafted challenge set reflecting classical n-gram limitations on nuanced natural language."
+    },
+    "face_verification": {
+      "method": "OpenCV Haar Cascade + SSIM/Pearson correlation",
+      "accuracy_cases": 3,
+      "accuracy_correct": 3,
+      "accuracy": 1.0,
+      "threshold": 0.5,
+      "functional_tests": 1,
+      "functional_note": "No-face distractor test validates the 'no face detected' code path; not counted in accuracy denominator.",
+      "note": "Educational demonstration prototype; not biometric-grade or production-secure."
+    }
+  },
+  "upload_validation": {
+    "bounded_read": true,
+    "http_413_implemented": true,
+    "pillow_header_check": true,
+    "decompression_bomb_protection": true,
+    "allowed_mime_types": ["image/jpeg", "image/png", "image/webp", "image/bmp"],
+    "min_dimension_px": 10,
+    "max_dimension_px": 4096,
+    "max_bytes": 5242880
+  },
+  "security": {
+    "secret_scan": "PASS",
+    "archive_path_traversal": "PASS",
+    "archive_absolute_paths": "PASS",
+    "archive_windows_drive_paths": "PASS",
+    "archive_unc_paths": "PASS",
+    "archive_symlinks": "PASS",
+    "exclusion_rules_tested": true,
+    "exclusion_report": "artifacts/packaging/exclusion_test_results.txt"
   },
   "api": {
     "path_count": 7,
@@ -25,25 +73,30 @@
       "/health/ready",
       "/recognize-face"
     ],
-    "docs": [
-      "/docs",
-      "/redoc",
-      "/openapi.json"
-    ]
-  },
-  "end_to_end": {
-    "passed": 5,
-    "total": 5
+    "http_413_endpoints": ["/classify-product", "/recognize-face"],
+    "docs": ["/docs", "/redoc", "/openapi.json"]
   },
   "deployment": {
     "dockerfile_exists": true,
     "compose_exists": true,
     "env_example_exists": true,
     "docker_cli_available": false,
-    "docker_build": false,
-    "docker_build_output_tail": "Docker CLI unavailable in execution environment; build not executed.",
-    "deployment_configuration_validated": true,
-    "overall_runtime_status": "runtime_not_executed"
+    "docker_build_executed": false,
+    "docker_build_note": "Docker CLI unavailable in execution environment; configuration inspected against Dockerfile source only.",
+    "dockerfile_build_type": "single-stage",
+    "dockerfile_base_image": "python:3.12-slim",
+    "dockerfile_user": "appuser",
+    "dockerfile_port": 8000,
+    "dockerfile_healthcheck": "GET /health/ready",
+    "compose_service_name": "smart-retail-api",
+    "deployment_configuration_validated": true
+  },
+  "distribution": {
+    "zip_name": "smart-retail-ai-v1.2.0.zip",
+    "sha256": "ee2f24bbf03bd223b3eb97186c328c83e31f7d2dff606043a2cb338ccef75666",
+    "sha256_file": "dist/SHA256SUMS.txt",
+    "export_manifest": "dist/EXPORT_MANIFEST.md",
+    "clean_room_verified": true
   },
   "evidence_directories": [
     "artifacts/product",
@@ -56,7 +109,8 @@
     "artifacts/api",
     "artifacts/deployment",
     "artifacts/end_to_end",
+    "artifacts/packaging",
     "artifacts/final"
   ],
-  "interpretation": "All artifacts are reconstructed/re-implemented project evidence. Controlled perfect scores are not presented as evidence of real-world generalization. Docker runtime was not executed because the Docker CLI was unavailable in the execution environment."
+  "interpretation": "All artifacts are reconstructed/re-implemented project evidence based on synthetic datasets (seed 42). Controlled accuracy scores on simple generated data are not presented as evidence of real-world generalization. Docker runtime was not executed — Docker CLI unavailable. No metrics, test results, or contribution records were fabricated."
 }

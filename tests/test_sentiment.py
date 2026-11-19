@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+from pathlib import Path
 from fastapi.testclient import TestClient
+
+from app.config import settings
+from app.services.sentiment_service import load_sentiment_model
 
 
 def test_sentiment_positive(client: TestClient):
@@ -36,7 +40,28 @@ def test_sentiment_neutral(client: TestClient):
     assert 0.0 <= data["confidence"] <= 1.0
 
 
-def test_sentiment_validation_error(client: TestClient):
-    # Empty string or missing body
+def test_sentiment_empty_string_validation(client: TestClient):
     response = client.post("/analyze-sentiment", json={"text": ""})
-    assert response.status_code in (200, 422, 400)
+    assert response.status_code == 422
+
+
+def test_sentiment_whitespace_validation(client: TestClient):
+    response = client.post("/analyze-sentiment", json={"text": "    \t \n   "})
+    assert response.status_code == 422
+
+
+def test_sentiment_oversized_string_validation(client: TestClient):
+    huge_text = "great product! " * 400  # > 5000 chars
+    response = client.post("/analyze-sentiment", json={"text": huge_text})
+    assert response.status_code == 422
+
+
+def test_sentiment_missing_model(client: TestClient, monkeypatch):
+    monkeypatch.setattr(settings, "sentiment_model_path", Path("nonexistent_sentiment_model.joblib"))
+    load_sentiment_model.cache_clear()
+    try:
+        response = client.post("/analyze-sentiment", json={"text": "Solid experience overall."})
+        assert response.status_code == 503
+        assert "unavailable" in response.json()["detail"]
+    finally:
+        load_sentiment_model.cache_clear()

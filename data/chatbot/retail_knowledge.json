@@ -4,7 +4,10 @@
     "delivery": "Standard delivery in this demo is estimated at 3–7 business days. Actual delivery depends on destination and shipping method."
   },
   "returns": {
-    "policy": "Return or exchange requests should be raised through the order-support workflow with the order ID and reason for return."
+    "policy": "Return or exchange requests should be raised through the order-support workflow with the order ID and reason for return within 30 days of purchase."
+  },
+  "refunds": {
+    "policy": "Refunds are credited to the original payment method within 5–7 business days once returned merchandise is inspected and approved."
   },
   "store": {
     "hours": "Store hours are configured as 10:00 AM to 8:00 PM, Monday to Saturday, for this reconstructed demo.",
@@ -16,6 +19,6 @@
     "catalog": "The reconstructed product demo covers Bottle, Mug, Headphones, and Shoe categories."
   },
   "payment": {
-    "methods": "A production version can expose the payment methods configured in the retail database. This reconstruction does not process payments."
+    "methods": "A production version can expose the payment methods configured in the retail database (Credit/Debit Card, UPI, Net Banking, Cash on Delivery). This reconstruction does not process live payments."
   }
 }

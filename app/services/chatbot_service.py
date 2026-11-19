@@ -1,14 +1,49 @@
 from __future__ import annotations
 
 import json
+import logging
 import re
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 KNOWLEDGE_PATH = BASE_DIR / "data" / "chatbot" / "retail_knowledge.json"
 
-with KNOWLEDGE_PATH.open("r", encoding="utf-8") as f:
-    KNOWLEDGE = json.load(f)
+DEFAULT_KNOWLEDGE = {
+    "shipping": {
+        "tracking": "Use the order ID with the order-status service to retrieve the latest shipment state.",
+        "delivery": "Standard delivery in this demo is estimated at 3–7 business days. Actual delivery depends on destination and shipping method."
+    },
+    "returns": {
+        "policy": "Return or exchange requests should be raised through the order-support workflow with the order ID and reason for return."
+    },
+    "store": {
+        "hours": "Store hours are configured as 10:00 AM to 8:00 PM, Monday to Saturday, for this reconstructed demo.",
+        "location": "The demo retail store is configured as a generic local store; a real deployment would load the branch address from the dashboard or database.",
+        "contact": "For unresolved support cases, keep the order ID and registered contact details ready for the customer-support team."
+    },
+    "products": {
+        "recommendation": "I can help narrow a purchase by product category, features, and customer sentiment, but this demo does not connect to live inventory or prices.",
+        "catalog": "The reconstructed product demo covers Bottle, Mug, Headphones, and Shoe categories."
+    },
+    "payment": {
+        "methods": "A production version can expose the payment methods configured in the retail database. This reconstruction does not process payments."
+    }
+}
+
+
+def _load_knowledge() -> dict:
+    if KNOWLEDGE_PATH.exists():
+        try:
+            with KNOWLEDGE_PATH.open("r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            logger.warning(f"Failed to read knowledge file from {KNOWLEDGE_PATH}: {e}. Using defaults.")
+    return DEFAULT_KNOWLEDGE
+
+
+KNOWLEDGE = _load_knowledge()
 
 # Phrase-weighted deterministic intent routing keeps the reconstruction local,
 # reproducible, and independent of external LLM/API credentials.

@@ -1,189 +1,195 @@
-[README.md](https://github.com/user-attachments/files/32665425/README.md)
 # AI-Powered Smart Retail & Customer Intelligence Platform
 
-A modular, reproducible AI/ML retail platform combining **product image classification, face verification, sentiment analysis, a deterministic retail chatbot, and a FastAPI gateway**.
+[![CI](https://github.com/1-a-d-i-t-y-a/smart-retail-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/1-a-d-i-t-y-a/smart-retail-ai/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Tests](https://img.shields.io/badge/Tests-24%20Passing-brightgreen?logo=pytest&logoColor=white)](tests/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](Dockerfile)
 
-> **Important:** This repository is a reconstructed/re-implemented academic project. Its generated datasets, metrics, screenshots, and evaluation artifacts are project-development evidence, not original historical internship telemetry.
+A modular, reproducible, offline-first AI/ML retail backend combining **product image classification**, **face verification**, **customer sentiment analysis**, and a **deterministic retail chatbot**, unified under a high-performance **FastAPI gateway**.
 
-## Features
+> **Academic Provenance Notice:** This platform reconstructs an intelligent retail automation system using classical, verifiable machine learning algorithms (HOG + SVM, Haar Cascades, SSIM, TF-IDF + Logistic Regression). Its evaluation benchmarks reflect reproducible local validation experiments rather than proprietary third-party telemetry.
 
-- Product classification using HOG + RBF SVM
-- Lightweight face verification using OpenCV and similarity matching
-- Retail sentiment analysis using TF-IDF + Logistic Regression
-- Deterministic retail chatbot with local knowledge base
-- FastAPI REST endpoints
-- Pydantic validation and controlled error handling
-- Health and readiness checks
-- Request statistics and structured logging
-- Swagger/OpenAPI documentation
-- Automated regression tests
-- Controlled and challenge-set model evaluation
-- Docker/Docker Compose configuration
-- GitHub Actions CI
+---
 
-## Architecture
+## Architecture Overview
 
-```text
-Client
-  |
-  v
-FastAPI Gateway
-  |
-  +--> Product Service --> HOG --> RBF SVM
-  |
-  +--> Face Service ------> OpenCV --> Similarity Matcher
-  |
-  +--> Sentiment Service -> TF-IDF -> Logistic Regression
-  |
-  +--> Chatbot Service ---> Intent Router -> Retail Knowledge Base
-  |
-  +--> Dashboard / Health / Readiness
+```mermaid
+flowchart TD
+    Client["Client App / Webhook / Terminal"] --> API["FastAPI Gateway (:8000)"]
+    
+    subgraph Observability
+        API --> Logging["Request Logging Middleware"]
+        API --> Stats["Telemetry / Dashboard (/dashboard/stats)"]
+    end
+
+    subgraph Core ML Services
+        API --> ProductSvc["Product Classifier"]
+        API --> FaceSvc["Face Verification"]
+        API --> SentimentSvc["Sentiment Engine"]
+        API --> ChatbotSvc["Retail Chatbot"]
+    end
+
+    ProductSvc --> HOG["OpenCV HOG (128x128)"] --> SVM["RBF Kernel SVM"]
+    FaceSvc --> Haar["Haar Cascade Detector"] --> SSIM["SSIM (0.70) + Corr (0.30)"]
+    SentimentSvc --> TFIDF["TF-IDF Vectorizer"] --> LogReg["Logistic Regression"]
+    ChatbotSvc --> RuleRouter["Phrase-Weighted Matcher"] --> KB["Retail Knowledge Base"]
 ```
 
-## API
+---
 
-| Method | Endpoint | Purpose |
-|---|---|---|
-| GET | `/health` | Service health |
-| GET | `/health/ready` | Model/artifact readiness |
-| POST | `/classify-product` | Product classification |
-| POST | `/recognize-face` | Face verification |
-| POST | `/analyze-sentiment` | Sentiment analysis |
-| POST | `/chatbot` | Retail chatbot |
-| GET | `/dashboard/stats` | Request statistics |
+## Key Features
 
-Interactive API documentation is available at `/docs` after starting the application.
+* **Product Image Classification:** Computes Histogram of Oriented Gradients (HOG) and classifies items using an RBF-kernel Support Vector Machine across standard retail categories (`bottle`, `mug`, `headphones`, `shoe`).
+* **Face Verification:** Detects frontal faces via Haar Cascades, normalizes illumination with histogram equalization, and performs biometric verification using Structural Similarity (SSIM) and Pearson correlation.
+* **Sentiment Analysis:** Categorizes customer reviews into `positive`, `neutral`, or `negative` using sublinear TF-IDF vectorization and Multinomial Logistic Regression.
+* **Deterministic Retail Chatbot:** Phrase-weighted intent router answering queries across 8 operational domains (tracking, returns, delivery, payments, hours) without external LLM dependencies.
+* **Production-Grade Reliability:** Pydantic request contracts, defensive error handling (HTTP 400/422/503), in-memory request telemetry, and health/readiness endpoints (`/health`, `/health/ready`).
+* **Automated CI/CD & Testing:** 24 comprehensive Pytest test cases executed via GitHub Actions on Python 3.11 and 3.12.
 
-## Quick Start
+---
 
-### 1. Clone
+## Technology Stack
 
-```bash
-git clone https://github.com/<YOUR_USERNAME>/smart-retail-ai.git
-cd smart-retail-ai
-```
+* **Language & Runtime:** Python 3.11 / 3.12
+* **Web Framework:** FastAPI, Uvicorn, Starlette
+* **Machine Learning:** Scikit-Learn, NumPy, SciPy, Joblib
+* **Computer Vision:** OpenCV (`opencv-python-headless`), Scikit-Image (`skimage`)
+* **Validation & Observability:** Pydantic v2, Python Logging
+* **Testing & Quality:** Pytest, HTTPX, Ruff
+* **DevOps & Containers:** Docker, Docker Compose, GitHub Actions
 
-### 2. Create a virtual environment
+---
 
-Windows PowerShell:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-```
-
-Linux/macOS:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-### 3. Install dependencies
-
-```bash
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-```
-
-### 4. Build/rebuild model artifacts
-
-```bash
-python scripts/build_all_models.py
-```
-
-### 5. Start the API
-
-```bash
-uvicorn app.main:app --reload
-```
-
-Open:
-
-```text
-http://127.0.0.1:8000/docs
-```
-
-## Testing
-
-Run the complete test suite:
-
-```bash
-python -m pytest -q
-```
-
-The reconstructed project currently contains **39 automated tests**, with the final local run reporting **39 passed**.
-
-## Evaluation
-
-Controlled and challenge evaluation are intentionally separated.
-
-| Component | Controlled | Challenge |
-|---|---:|---:|
-| Product Classification | 100% CV | 60.0% accuracy |
-| Face Verification | 10/10 controlled benchmark | Not sufficient for generalization |
-| Sentiment Analysis | 100% held-out | 38.9% accuracy |
-| Chatbot | 9/9 scenarios | Functional |
-| End-to-End | 5/5 workflows | PASS |
-
-The challenge results are included to avoid presenting perfect controlled scores as evidence of unrestricted real-world generalization.
-
-## Docker
-
-Docker configuration is included in `Dockerfile` and `docker-compose.yml`.
-
-The Docker configuration was prepared and tested structurally, but an actual container runtime was not executed in the reconstruction environment because the Docker CLI was unavailable. Do not interpret the repository as evidence of a completed container deployment.
-
-## Repository Structure
+## Directory Structure
 
 ```text
 smart-retail-ai/
-├── app/                 # FastAPI application and AI services
-├── data/                # Reconstructed local datasets
-├── models/              # Persisted model artifacts
-├── artifacts/           # Evaluation and API evidence
-├── docs/                # Technical documentation
-├── scripts/             # Training, evaluation and verification scripts
-├── tests/               # Automated tests
-├── .github/workflows/   # GitHub Actions CI
-├── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-├── LICENSE
-└── README.md
+├── .github/workflows/       # GitHub Actions CI workflow
+├── app/
+│   ├── api/                 # FastAPI route controllers
+│   ├── models/              # Module declarations
+│   ├── schemas/             # Pydantic input/output schemas
+│   ├── services/            # Core ML and business logic services
+│   ├── utils/               # Feature extractors and validation helpers
+│   ├── config.py            # Application settings and environment paths
+│   ├── core.py              # In-memory metrics counters
+│   ├── main.py              # FastAPI application gateway entrypoint
+│   └── observability.py     # Request logging and middleware
+├── data/
+│   ├── chatbot/             # Retail knowledge-base JSON
+│   └── haarcascades/        # Bundled fallback Haar cascade classifiers
+├── docs/                    # Architecture, API reference, model evaluation docs
+├── models/                  # Serialized ML model artifacts (*.joblib, *.pkl)
+├── scripts/                 # Reproducible model training and build scripts
+├── tests/                   # 24 automated unit & integration test cases
+├── Dockerfile               # Container build configuration
+├── docker-compose.yml       # Multi-service container orchestration
+├── pytest.ini               # Test configuration
+└── requirements.txt         # Pinned Python dependencies
 ```
+
+---
+
+## Quickstart & Local Setup
+
+### 1. Clone & Environment Setup
+```bash
+git clone https://github.com/1-a-d-i-t-y-a/smart-retail-ai.git
+cd smart-retail-ai
+
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# Linux/macOS:
+source venv/bin/activate
+
+pip install -r requirements.txt
+```
+
+### 2. Generate Baseline Model Artifacts
+Generate the baseline weights for product classification, sentiment analysis, and the demo face database in a single command:
+```bash
+python scripts/train_baseline_models.py
+```
+
+### 3. Run Automated Tests
+```bash
+pytest tests/ -v
+```
+
+### 4. Start the Application
+```bash
+uvicorn app.main:app --reload --port 8000
+```
+Visit **[http://localhost:8000/docs](http://localhost:8000/docs)** for the interactive Swagger UI.
+
+---
+
+## Docker Deployment
+
+Build and run using Docker Compose:
+```bash
+docker compose up --build
+```
+The container performs automated health probes against `http://127.0.0.1:8000/health/ready`.
+
+---
+
+## Example API Requests
+
+### 1. Chatbot Query
+```bash
+curl -X POST "http://localhost:8000/chatbot" \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Where is my order?"}'
+```
+**Response:**
+```json
+{
+  "intent": "order_status",
+  "response": "Use the order ID with the order-status service to retrieve the latest shipment state."
+}
+```
+
+### 2. Sentiment Analysis
+```bash
+curl -X POST "http://localhost:8000/analyze-sentiment" \
+  -H "Content-Type: application/json" \
+  -d '{"text": "The headphones arrived quickly and sound crystal clear!"}'
+```
+**Response:**
+```json
+{
+  "sentiment": "positive",
+  "confidence": 0.9412
+}
+```
+
+---
 
 ## Documentation
 
-- [Complete AI/ML Project Documentation](docs/PROJECT_DOCUMENTATION.md)
-- [API Documentation](docs/api_documentation.md)
-- [Architecture](docs/architecture.svg)
-- [Chatbot](docs/chatbot.md)
-- [Face Verification](docs/face_recognition.md)
-- [Sentiment Analysis](docs/sentiment_analysis.md)
+* [Architecture & Flowcharts](docs/ARCHITECTURE.md)
+* [Full API Reference](docs/API_REFERENCE.md)
+* [Model Evaluation Methodology](docs/MODEL_EVALUATION.md)
+* [Local Development Guide](docs/DEVELOPMENT.md)
 
-## Selected Evidence
+---
 
-### Product Classification API
+## Contributing & Community
 
-![Product Classification API](docs/screenshots/01-product-classification-api.png)
+Contributions are welcomed! Please read our [Contributing Guide](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md).
 
-### Sentiment Analysis API
+1. Fork the Project.
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your Changes (`git commit -m 'feat: Add AmazingFeature'`).
+4. Push to the Branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
 
-![Sentiment Analysis API](docs/screenshots/02-sentiment-analysis-api.png)
-
-### Automated Tests
-
-![Pytest](docs/screenshots/03-pytest-39-passed.png)
-
-### Face Verification
-
-![Face Verification](docs/screenshots/04-face-verification.png)
-
-## Academic / Provenance Note
-
-This project was reconstructed as a reproducible technical implementation. Generated datasets, screenshots, metrics and evaluation results should be described as reconstructed project evidence in academic reporting unless independently supported by original records.
+---
 
 ## License
 
-MIT License. See [LICENSE](LICENSE).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

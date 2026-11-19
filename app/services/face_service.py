@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import pickle
 from functools import lru_cache
 from pathlib import Path
@@ -8,17 +9,39 @@ import cv2
 import numpy as np
 from skimage.metrics import structural_similarity as ssim
 
+logger = logging.getLogger(__name__)
+
 ROOT = Path(__file__).resolve().parents[2]
 DB_PATH = ROOT / "models" / "face_db.pkl"
-CASCADE = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+SYSTEM_CASCADE = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+LOCAL_CASCADE = ROOT / "data" / "haarcascades" / "haarcascade_frontalface_default.xml"
+
+
+def _get_cascade_detector() -> cv2.CascadeClassifier | None:
+    if Path(SYSTEM_CASCADE).exists():
+        detector = cv2.CascadeClassifier(SYSTEM_CASCADE)
+        if not detector.empty():
+            return detector
+    if LOCAL_CASCADE.exists():
+        detector = cv2.CascadeClassifier(str(LOCAL_CASCADE))
+        if not detector.empty():
+            return detector
+    logger.warning("No valid Haar Cascade XML found for face detection.")
+    return None
 
 
 def _detect_largest_face(gray: np.ndarray):
-    detector = cv2.CascadeClassifier(CASCADE)
-    faces = detector.detectMultiScale(gray, scaleFactor=1.08, minNeighbors=5, minSize=(60, 60))
-    if len(faces) == 0:
+    detector = _get_cascade_detector()
+    if detector is None or detector.empty():
         return None
-    return max(faces, key=lambda r: r[2] * r[3])
+    try:
+        faces = detector.detectMultiScale(gray, scaleFactor=1.08, minNeighbors=5, minSize=(60, 60))
+        if len(faces) == 0:
+            return None
+        return max(faces, key=lambda r: r[2] * r[3])
+    except Exception as exc:
+        logger.warning("Error running detectMultiScale: %s", exc)
+        return None
 
 
 def _normalize_face(gray_face: np.ndarray) -> np.ndarray:
@@ -66,6 +89,8 @@ def build_face_db(reference_image: Path, threshold: float = 0.52) -> None:
 
 @lru_cache(maxsize=1)
 def _load_face_db() -> dict:
+    if not DB_PATH.exists():
+        raise FileNotFoundError(f"Face database file {DB_PATH} not found.")
     with open(DB_PATH, "rb") as f:
         return pickle.load(f)
 
@@ -98,6 +123,16 @@ def recognize_face(image_bytes: bytes) -> dict:
         ref = np.clip(record["image"] * 255.0, 0, 255).astype(np.uint8)
         combined, _, _ = _similarity(query, ref)
         scores[name] = combined
+
+    if not scores:
+        return {
+            "matched": False,
+            "person": None,
+            "distance": None,
+            "similarity": None,
+            "bbox": [int(x), int(y), int(w), int(h)],
+            "message": "Face database contains no registered individuals.",
+        }
 
     person, similarity = max(scores.items(), key=lambda item: item[1])
     threshold = float(db.get("threshold", 0.52))

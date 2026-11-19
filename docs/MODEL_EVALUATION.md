@@ -1,4 +1,4 @@
-# Smart Retail AI Platform: Model Evaluation Report
+﻿# Smart Retail AI Platform: Model Evaluation Report
 
 **Evaluation Date:** November 19, 2026  
 **Artifact Generation:** Deterministic via `scripts/evaluate_models.py`  
@@ -108,8 +108,9 @@ $$\text{Verification Accuracy} = 100.00\% \quad (3/3 \text{ benchmark test scena
 | **Registered Identity** | `person_01_reference.png` | Match | Match | 1.0000 | 0.0000 | Correct |
 | **Positive Query** | `positive_query.png` (illumination shifted) | Match | Match | 0.9953 | 0.0047 | Correct |
 | **Unregistered Identity** | `negative_other_face.png` | No Match | No Match | 0.2759 | 0.7241 | Correct |
-| **Non-Face Distractor** | `no_face_distractor.png` | No Match | No Match | N/A | N/A | Correct (0 faces detected) |
+| **Non-Face Distractor** _(functional test — not in accuracy denominator)_ | `no_face_distractor.png` | No Match | No Match | N/A | N/A | ✅ Code path verified |
 
 ### 4.3 Engineering Scope & Limitations
 - **Educational / Demo Purpose:** The face verification pipeline is designed to demonstrate computer vision image processing fundamentals.
 - **Not Biometric Grade:** It does not use deep representation networks (such as ArcFace or FaceNet) and lacks liveness detection, 3D anti-spoofing, and pose invariance.
+

@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import asyncio
+import io
 import cv2
 import numpy as np
 import pytest
+from unittest.mock import AsyncMock, MagicMock
 
 from app.config import settings
-from app.utils.validation import validate_image_payload
+from app.utils.validation import PayloadTooLargeError, read_bounded_upload, validate_image_payload
 
 
 def test_validate_image_payload_success(sample_image_bytes: bytes):
@@ -37,7 +40,7 @@ def test_validate_image_payload_oversized(monkeypatch):
 
 
 def test_validate_image_payload_corrupt_bytes():
-    with pytest.raises(ValueError, match="Could not decode image"):
+    with pytest.raises(ValueError, match="Could not decode image|header validation failed"):
         validate_image_payload("image/jpeg", b"NOT_A_VALID_JPEG_HEADER_BYTES")
 
 
@@ -57,3 +60,46 @@ def test_validate_image_payload_oversized_dimension(monkeypatch):
     _, enc = cv2.imencode(".png", big)
     with pytest.raises(ValueError, match="exceed maximum allowed"):
         validate_image_payload("image/png", enc.tobytes())
+
+
+# --- read_bounded_upload tests ---
+
+def _make_upload_file(data: bytes, chunk_size: int = 65536):
+    """Create a mock UploadFile that yields chunks."""
+    chunks = [data[i:i+chunk_size] for i in range(0, len(data), chunk_size)]
+    chunks.append(b"")  # EOF sentinel
+
+    async def _read(size=-1):
+        if chunks:
+            return chunks.pop(0)
+        return b""
+
+    mock = MagicMock()
+    mock.read = _read
+    return mock
+
+
+def test_read_bounded_upload_within_limit():
+    data = b"A" * 1000
+    mock_file = _make_upload_file(data)
+    result = asyncio.get_event_loop().run_until_complete(
+        read_bounded_upload(mock_file, max_bytes=2000)
+    )
+    assert result == data
+
+
+def test_read_bounded_upload_exceeds_limit():
+    data = b"B" * 200_000
+    mock_file = _make_upload_file(data)
+    with pytest.raises(PayloadTooLargeError, match="limit"):
+        asyncio.get_event_loop().run_until_complete(
+            read_bounded_upload(mock_file, max_bytes=100)
+        )
+
+
+def test_read_bounded_upload_empty_file():
+    mock_file = _make_upload_file(b"")
+    with pytest.raises(ValueError, match="empty"):
+        asyncio.get_event_loop().run_until_complete(
+            read_bounded_upload(mock_file, max_bytes=1024)
+        )

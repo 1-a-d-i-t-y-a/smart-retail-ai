@@ -1,4 +1,4 @@
-# Smart Retail AI Platform: Production Deployment Guide
+﻿# Smart Retail AI Platform: Production Deployment Guide
 
 This guide describes how to deploy the Smart Retail AI platform in containerized and standalone enterprise environments.
 
@@ -7,7 +7,7 @@ This guide describes how to deploy the Smart Retail AI platform in containerized
 ## 1. Containerized Deployment with Docker
 
 ### 1.1 Multi-Stage Dockerfile Overview
-The application includes a production-hardened `Dockerfile` utilizing a minimal `python:3.12-slim` base image:
+The application includes a security-conscious `Dockerfile` (Docker image build and runtime not executed in this environment — Docker is unavailable; configuration and commands are verified against the Dockerfile source) utilizing a minimal `python:3.12-slim` base image:
 - System build dependencies (`libgl1`, `libglib2.0-0` for OpenCV).
 - Automatic model building during container image creation (`python scripts/build_all_models.py`).
 - Security: Non-root execution user (`retailapp`).
@@ -58,3 +58,4 @@ docker-compose down
 3. **Payload Limits:** Configure `client_max_body_size 10M;` in Nginx to align with the application's internal 5 MB image ceiling.
 4. **Rate Limiting:** Protect `/classify-product` and `/recognize-face` with rate limits (e.g. 60 requests/minute per IP) to prevent CPU resource exhaustion.
 5. **Observability:** Monitor response times using the logged `X-Request-ID` and latency logs emitted by `RequestLoggingMiddleware`.
+

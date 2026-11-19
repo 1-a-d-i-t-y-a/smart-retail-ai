@@ -6,7 +6,8 @@ from fastapi import APIRouter, File, HTTPException, UploadFile, status
 from app.core import increment
 from app.schemas.api import FaceResponse
 from app.services.face_service import recognize_face
-from app.utils.validation import validate_image_payload
+from app.utils.validation import PayloadTooLargeError, read_bounded_upload, validate_image_payload
+from app.config import settings
 
 logger = logging.getLogger(__name__)
 router = APIRouter(tags=["Face Recognition"])
@@ -20,16 +21,19 @@ router = APIRouter(tags=["Face Recognition"])
     responses={
         200: {"description": "Face verification completed (matched or unmatched)."},
         400: {"description": "Invalid image payload or corrupted file."},
+        413: {"description": "Upload exceeds the configured size limit."},
         503: {"description": "Face database not initialized or unavailable."},
     },
 )
 async def recognize_face_route(file: UploadFile = File(...)):
     try:
-        payload = await file.read()
+        payload = await read_bounded_upload(file, settings.max_image_bytes)
         validate_image_payload(file.content_type, payload)
         result = recognize_face(payload)
         increment("face_requests")
         return result
+    except PayloadTooLargeError as exc:
+        raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail=str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
     except FileNotFoundError as exc:

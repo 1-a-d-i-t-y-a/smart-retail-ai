@@ -31,7 +31,7 @@ def test_classify_product_corrupt_image(client: TestClient, invalid_image_bytes:
     files = {"file": ("corrupt.jpg", invalid_image_bytes, "image/jpeg")}
     response = client.post("/classify-product", files=files)
     assert response.status_code == 400
-    assert "Could not decode image" in response.json()["detail"]
+    assert "Could not decode image" in response.json()["detail"] or "header validation failed" in response.json()["detail"]
 
 
 def test_classify_product_empty_image(client: TestClient):
@@ -39,6 +39,16 @@ def test_classify_product_empty_image(client: TestClient):
     response = client.post("/classify-product", files=files)
     assert response.status_code == 400
     assert "empty" in response.json()["detail"]
+
+
+def test_classify_product_oversized_upload(client: TestClient, monkeypatch):
+    """Uploading a payload that exceeds the size limit must return HTTP 413."""
+    monkeypatch.setattr(settings, "max_image_bytes", 50)
+    large_payload = b"X" * 200
+    files = {"file": ("big.jpg", large_payload, "image/jpeg")}
+    response = client.post("/classify-product", files=files)
+    assert response.status_code == 413
+    assert "limit" in response.json()["detail"]
 
 
 def test_classify_product_undersized_dimensions(client: TestClient, monkeypatch):

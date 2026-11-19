@@ -6,6 +6,9 @@
     "threshold": 0.5,
     "mean_positive_similarity": 0.9976499999999999,
     "mean_negative_similarity": 0.2759,
+    "functional_cases": 1,
+    "functional_passed": 1,
+    "functional_note": "No-face distractor test validates the 'no face detected' code path; not counted in accuracy denominator.",
     "note": "Face verification evaluation using OpenCV Haar Cascade and SSIM/Pearson correlation matching."
   },
   "results": [
@@ -56,6 +59,17 @@
       "message": "Face detected but no registered match",
       "expected_match": false,
       "correct": true
+    }
+  ],
+  "functional_checks": [
+    {
+      "case": "no_face_distractor",
+      "type": "functional_test",
+      "matched": false,
+      "person": null,
+      "message": "No face detected in query image.",
+      "expected_matched": false,
+      "passed": true
     }
   ]
 }

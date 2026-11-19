@@ -71,13 +71,30 @@ def test_face_recognition_no_face_detected(client: TestClient):
     assert "No face detected" in data["message"]
 
 
+def test_face_recognition_oversized_upload(client: TestClient, monkeypatch):
+    """Uploading a payload that exceeds the size limit must return HTTP 413."""
+    monkeypatch.setattr(settings, "max_image_bytes", 50)
+    large_payload = b"X" * 200
+    files = {"file": ("big.png", large_payload, "image/png")}
+    response = client.post("/recognize-face", files=files)
+    assert response.status_code == 413
+    assert "limit" in response.json()["detail"]
+
+
 def test_face_recognition_missing_database(client: TestClient, sample_image_bytes: bytes, monkeypatch):
+    """When the face DB is missing, any image that hits the DB lookup should return 503."""
     monkeypatch.setattr(settings, "face_db_path", Path("nonexistent_face_db.pkl"))
     load_face_db.cache_clear()
     try:
-        files = {"file": ("face.jpg", sample_image_bytes, "image/jpeg")}
+        # Use the registered reference image — it triggers the DB lookup which will fail.
+        ref_img_path = ROOT / "data" / "training" / "face" / "person_01_reference.png"
+        if not ref_img_path.exists():
+            ref_img_path = ROOT / "artifacts" / "face" / "reference_annotated.png"
+        with open(ref_img_path, "rb") as f:
+            img_bytes = f.read()
+        files = {"file": ("face.png", img_bytes, "image/png")}
         response = client.post("/recognize-face", files=files)
-        # May be 200 with 'No face detected' on arbitrary sample image, or 503 if face detected and DB queried
-        assert response.status_code in (200, 503)
+        assert response.status_code == 503
+        assert "unavailable" in response.json()["detail"]
     finally:
         load_face_db.cache_clear()

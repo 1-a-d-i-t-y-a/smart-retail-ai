@@ -10,8 +10,14 @@ from __future__ import annotations
 
 import csv
 import json
+import os
 import pickle
+import sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 import cv2
 import joblib
@@ -21,7 +27,6 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from app.services.face_service import recognize_face
 from app.utils.image_features import hog_descriptor
 
-ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 EVAL_DIR = DATA_DIR / "evaluation"
 MODELS_DIR = ROOT / "models"
@@ -217,6 +222,23 @@ def evaluate_face_model() -> dict:
             "correct": is_correct,
         })
 
+    # Functional test scenario (not counted in 3/3 accuracy denominator)
+    functional_results = []
+    distractor_path = face_eval_dir / "no_face_distractor.png"
+    if distractor_path.exists():
+        with open(distractor_path, "rb") as f:
+            distractor_payload = f.read()
+        distractor_verdict = recognize_face(distractor_payload)
+        functional_results.append({
+            "case": "no_face_distractor",
+            "type": "functional_test",
+            "matched": distractor_verdict["matched"],
+            "person": distractor_verdict.get("person"),
+            "message": distractor_verdict.get("message"),
+            "expected_matched": False,
+            "passed": (distractor_verdict["matched"] is False and "No face detected" in (distractor_verdict.get("message") or "")),
+        })
+
     eval_out = {
         "metrics": {
             "cases": len(cases),
@@ -225,9 +247,13 @@ def evaluate_face_model() -> dict:
             "threshold": threshold,
             "mean_positive_similarity": float(np.mean(pos_sims)) if pos_sims else 0.0,
             "mean_negative_similarity": float(np.mean(neg_sims)) if neg_sims else 0.0,
+            "functional_cases": len(functional_results),
+            "functional_passed": sum(1 for fr in functional_results if fr["passed"]),
+            "functional_note": "No-face distractor test validates the 'no face detected' code path; not counted in accuracy denominator.",
             "note": "Face verification evaluation using OpenCV Haar Cascade and SSIM/Pearson correlation matching.",
         },
         "results": results,
+        "functional_checks": functional_results,
     }
 
     out_dir = ARTIFACTS_DIR / "face"
@@ -236,6 +262,8 @@ def evaluate_face_model() -> dict:
         json.dump(eval_out, f, indent=2)
 
     print(f"  Face Verification Accuracy: {eval_out['metrics']['accuracy'] * 100:.2f}% ({len(cases)} cases)")
+    if functional_results:
+        print(f"  Face Functional Checks: {eval_out['metrics']['functional_passed']}/{len(functional_results)} passed")
     return eval_out
 
 
@@ -243,9 +271,29 @@ def main():
     print("=" * 60)
     print("Smart Retail AI — Model Evaluation & Metric Generation")
     print("=" * 60)
-    evaluate_product_model()
-    evaluate_sentiment_model()
-    evaluate_face_model()
+    product_metrics = evaluate_product_model()
+    sentiment_metrics = evaluate_sentiment_model()
+    face_metrics = evaluate_face_model()
+
+    # Consolidate into single authoritative evaluation artifact
+    unified_eval = {
+        "metadata": {
+            "project": "AI-Powered Smart Retail & Customer Intelligence Platform",
+            "version": "1.2.0",
+            "authoritative": True,
+            "random_seed": 42,
+            "description": "Unified authoritative evaluation artifact generated from actual script execution.",
+        },
+        "product_classification": product_metrics,
+        "sentiment_analysis": sentiment_metrics,
+        "face_verification": face_metrics,
+    }
+    eval_dir = ARTIFACTS_DIR / "evaluation"
+    eval_dir.mkdir(parents=True, exist_ok=True)
+    with open(eval_dir / "model_evaluation.json", "w", encoding="utf-8") as f:
+        json.dump(unified_eval, f, indent=2)
+    print(f"  Consolidated evaluation artifact written to: {eval_dir / 'model_evaluation.json'}")
+
     print("=" * 60)
     print("Evaluation complete! Verified artifacts saved to artifacts/")
     print("=" * 60)

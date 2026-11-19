@@ -1,9 +1,9 @@
-# AI-Powered Smart Retail & Customer Intelligence Platform
+﻿# AI-Powered Smart Retail & Customer Intelligence Platform
 
 [![CI](https://github.com/1-a-d-i-t-y-a/smart-retail-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/1-a-d-i-t-y-a/smart-retail-ai/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Tests](https://img.shields.io/badge/Tests-52%20Passing-brightgreen?logo=pytest&logoColor=white)](tests/)
+[![Tests](https://img.shields.io/badge/Tests-96%20Passing-brightgreen?logo=pytest&logoColor=white)](tests/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](Dockerfile)
 
@@ -45,8 +45,8 @@ flowchart TD
 * **Face Verification:** Detects frontal faces via Haar Cascades, normalizes illumination with histogram equalization, and performs verification using Structural Similarity (SSIM) and Pearson correlation.
 * **Sentiment Analysis:** Categorizes customer reviews into `positive`, `neutral`, or `negative` using sublinear TF-IDF vectorization and Multinomial Logistic Regression.
 * **Deterministic Retail Chatbot:** Phrase-weighted intent router answering queries across 9 operational domains (tracking, shipping, returns, refunds, payments, hours, store info, support, catalog) without external LLM dependencies.
-* **Production-Grade Reliability:** Pydantic request contracts, defensive error handling (HTTP 400/422/503), thread-safe request telemetry, and health/readiness endpoints (`/health`, `/health/ready`).
-* **Automated CI/CD & Testing:** 52 comprehensive Pytest test cases executed via GitHub Actions on Python 3.11 and 3.12.
+* **Defensive Reliability:** Pydantic request contracts, defensive error handling (HTTP 400/422/503), thread-safe request telemetry, and health/readiness endpoints (`/health`, `/health/ready`).
+* **Automated CI/CD & Testing:** 96 comprehensive Pytest test cases executed via GitHub Actions on Python 3.11 and 3.12.
 
 ---
 
@@ -82,31 +82,31 @@ flowchart TD
 
 ```text
 smart-retail-ai/
-├── .github/workflows/       # GitHub Actions CI workflow
-├── app/
-│   ├── api/                 # FastAPI route controllers
-│   ├── models/              # Module declarations
-│   ├── schemas/             # Pydantic input/output schemas
-│   ├── services/            # Core ML and business logic services
-│   ├── utils/               # Feature extractors and validation helpers
-│   ├── config.py            # Application settings and environment paths
-│   ├── core.py              # In-memory thread-safe metrics counters
-│   ├── main.py              # FastAPI application gateway entrypoint
-│   └── observability.py     # Request logging and middleware
-├── artifacts/               # Verified evaluation metrics, confusion matrices
-├── data/
-│   ├── chatbot/             # Retail knowledge-base JSON
-│   ├── evaluation/          # Held-out test splits and challenge sets
-│   ├── haarcascades/        # Bundled fallback Haar cascade classifiers
-│   └── training/            # Deterministic training datasets
-├── docs/                    # Architecture, API reference, model evaluation docs
-├── models/                  # Serialized ML model artifacts (*.joblib, *.pkl)
-├── scripts/                 # Reproducible model training and build scripts
-├── tests/                   # 52 automated unit & integration test cases
-├── Dockerfile               # Multi-stage production container build
-├── docker-compose.yml       # Multi-service container orchestration
-├── pytest.ini               # Test configuration
-└── requirements.txt         # Pinned Python dependencies
+â”œâ”€â”€ .github/workflows/       # GitHub Actions CI workflow
+â”œâ”€â”€ app/
+â”‚   â”œâ”€â”€ api/                 # FastAPI route controllers
+â”‚   â”œâ”€â”€ models/              # Module declarations
+â”‚   â”œâ”€â”€ schemas/             # Pydantic input/output schemas
+â”‚   â”œâ”€â”€ services/            # Core ML and business logic services
+â”‚   â”œâ”€â”€ utils/               # Feature extractors and validation helpers
+â”‚   â”œâ”€â”€ config.py            # Application settings and environment paths
+â”‚   â”œâ”€â”€ core.py              # In-memory thread-safe metrics counters
+â”‚   â”œâ”€â”€ main.py              # FastAPI application gateway entrypoint
+â”‚   â””â”€â”€ observability.py     # Request logging and middleware
+â”œâ”€â”€ artifacts/               # Verified evaluation metrics, confusion matrices
+â”œâ”€â”€ data/
+â”‚   â”œâ”€â”€ chatbot/             # Retail knowledge-base JSON
+â”‚   â”œâ”€â”€ evaluation/          # Held-out test splits and challenge sets
+â”‚   â”œâ”€â”€ haarcascades/        # Bundled fallback Haar cascade classifiers
+â”‚   â””â”€â”€ training/            # Deterministic training datasets
+â”œâ”€â”€ docs/                    # Architecture, API reference, model evaluation docs
+â”œâ”€â”€ models/                  # Serialized ML model artifacts (*.joblib, *.pkl)
+â”œâ”€â”€ scripts/                 # Reproducible model training and build scripts
+â”œâ”€â”€ tests/                   # 96 automated unit & integration test cases
+â”œâ”€â”€ Dockerfile               # Multi-stage production container build
+â”œâ”€â”€ docker-compose.yml       # Multi-service container orchestration
+â”œâ”€â”€ pytest.ini               # Test configuration
+â””â”€â”€ requirements.txt         # Version-constrained Python dependencies
 ```
 
 ---
@@ -168,7 +168,7 @@ curl -X POST "http://localhost:8000/chatbot" \
 ```json
 {
   "intent": "refunds",
-  "response": "Refunds are credited to the original payment method within 5–7 business days once returned merchandise is inspected and approved."
+  "response": "Refunds are credited to the original payment method within 5â€“7 business days once returned merchandise is inspected and approved."
 }
 ```
 
@@ -212,3 +212,6 @@ Contributions are welcomed! Please read our [Contributing Guide](CONTRIBUTING.md
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
+
